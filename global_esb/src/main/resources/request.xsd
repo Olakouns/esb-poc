@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://localhost:8080"
-           xmlns="http://localhost:8080"
+           xmlns:tns="http://localhost:8080"
            elementFormDefault="qualified">
 
+    <xs:element name="actionResponse">
+    </xs:element>
     <xs:element name="actionRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="actionParameter" type="ActionParameterType" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element name="actionOffer" type="ActionOfferType" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="actionOffer" type="ActionOfferType" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="mainAction" type="xs:string" use="required"/>
             <xs:attribute name="requestId" type="xs:string" use="required"/>
@@ -18,9 +20,6 @@
     </xs:element>
 
     <xs:complexType name="ActionParameterType">
-        <xs:sequence>
-            <xs:element name="actionService" type="ActionServiceType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
         <xs:attribute name="paramName" type="xs:string" use="required"/>
         <xs:attribute name="oldValue" type="xs:string" use="optional"/>
         <xs:attribute name="newValue" type="xs:string" use="optional"/>
@@ -28,7 +27,7 @@
 
     <xs:complexType name="ActionOfferType">
         <xs:sequence>
-            <xs:element name="actionService" type="ActionServiceType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="actionService" type="ActionServiceType" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="offerName" type="xs:string" use="required"/>
         <xs:attribute name="verb" type="xs:string" use="required"/>

@@ -11,10 +11,17 @@ import sn.esmt.gesb.wsdl.*;
 @Endpoint
 public class GesbController {
 
-    private static final String NAMESPACE_URI = "http://localhost:8080/myservice";
+    private static final String NAMESPACE_URI = "http://localhost:8080";
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "requestFootMatch")
-    public @ResponsePayload FootMatch getMatch(@RequestPayload String requestFootMatch){
-        return new FootMatch();
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "ActionRequest")
+    public boolean processESBRequest(@RequestPayload ActionRequest actionRequest){
+        System.out.println(actionRequest);
+        return true;
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "testSOAPRequest")
+    public boolean testSOAP(){
+        System.out.println("actionRequest");
+        return true;
     }
 }

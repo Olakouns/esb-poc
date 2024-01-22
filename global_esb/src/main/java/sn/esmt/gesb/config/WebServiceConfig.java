@@ -3,6 +3,7 @@ package sn.esmt.gesb.config;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
@@ -14,6 +15,7 @@ import org.springframework.xml.xsd.XsdSchema;
 
 @EnableWs
 @Configuration
+@ComponentScan(basePackages = "sn.esmt.gesb.controllers")
 public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
@@ -28,7 +30,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("g_esbPort");
         wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setTargetNamespace("http://localhost:8080/myservice");
+        wsdl11Definition.setTargetNamespace("http://localhost:8080");
         wsdl11Definition.setSchema(schema);
         return wsdl11Definition;
     }
