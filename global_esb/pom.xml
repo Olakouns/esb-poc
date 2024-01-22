@@ -39,6 +39,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -53,19 +65,22 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.jvnet.jaxb2.maven2</groupId>
-				<artifactId>maven-jaxb2-plugin</artifactId>
-				<version>0.15.1</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
+						<id>xjc</id>
 						<goals>
-							<goal>generate</goal>
+							<goal>xjc</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<generatePackage>sn.esmt.gesb.wsdl</generatePackage>
-					<schemaDirectory>${project.basedir}/src/main/resources/</schemaDirectory>
+					<sources>
+						<source>src/main/resources/request.xsd</source>
+					</sources>
+					<packageName>sn.esmt.gesb.wsdl</packageName>
 				</configuration>
 			</plugin>
 		</plugins>

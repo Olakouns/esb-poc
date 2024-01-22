@@ -15,7 +15,6 @@ import org.springframework.xml.xsd.XsdSchema;
 
 @EnableWs
 @Configuration
-@ComponentScan(basePackages = "sn.esmt.gesb.controllers")
 public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
@@ -25,12 +24,12 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean<>(servlet, "/ws/*");
     }
 
-    @Bean(name = "g_esb")
+    @Bean(name = "esb")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema schema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("g_esbPort");
+        wsdl11Definition.setPortTypeName("esb");
         wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setTargetNamespace("http://localhost:8080");
+        wsdl11Definition.setTargetNamespace("http://esb.sn/esmt");
         wsdl11Definition.setSchema(schema);
         return wsdl11Definition;
     }
