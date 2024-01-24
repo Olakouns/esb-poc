@@ -1,4 +1,7 @@
 package sn.esmt.gesb.services;
 
-public class RequestProcessorService {
+import sn.esmt.gesb.wsdl.ActionRequest;
+
+public interface RequestProcessorService {
+    void processRequest(ActionRequest actionRequest);
 }
