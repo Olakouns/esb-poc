@@ -1,7 +1,8 @@
 package sn.esmt.gesb.services;
 
 import sn.esmt.gesb.wsdl.ActionRequest;
+import sn.esmt.models.TPOData;
 
 public interface RequestProcessorService {
-    void processRequest(ActionRequest actionRequest);
+    TPOData processRequest(ActionRequest actionRequest);
 }
