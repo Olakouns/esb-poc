@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import sn.esmt.gesb.wsdl.ActionRequest;
-import sn.esmt.gesb.wsdl.ActionResponse;
+//import sn.esmt.gesb.wsdl.ActionRequest;
+//import sn.esmt.gesb.wsdl.ActionResponse;
 
 import java.util.concurrent.ForkJoinPool;
 
@@ -25,7 +25,7 @@ public class QueueManagerController {
                 Thread.sleep(6000);
             } catch (InterruptedException e) {
             }
-            output.setResult(ResponseEntity.ok(new ActionRequest()));
+//            output.setResult(ResponseEntity.ok(new ActionRequest()));
         });
 
         System.err.println("servlet thread freed");

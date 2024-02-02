@@ -9,19 +9,19 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import sn.esmt.gesb.services.RequestProcessorService;
-import sn.esmt.gesb.wsdl.*;
+//import sn.esmt.gesb.wsdl.*;
 
 @Endpoint
 @RequiredArgsConstructor
 public class GesbController {
 
-    private static final String NAMESPACE_URI = "http://esb.sn/esmt";
+    private static final String NAMESPACE_URI = "http://esmt.sn/gesb/xml";
     private final RequestProcessorService requestProcessorService;
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "actionRequest")
-    @ResponsePayload
-    public ActionResponse processRequest(@RequestPayload ActionRequest actionRequest){
-        requestProcessorService.processRequest(actionRequest);
-        return new ActionResponse();
-    }
+//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "actionRequest")
+//    @ResponsePayload
+//    public ActionResponse processRequest(@RequestPayload ActionRequest actionRequest){
+//        requestProcessorService.processRequest(actionRequest);
+//        return new ActionResponse();
+//    }
 }

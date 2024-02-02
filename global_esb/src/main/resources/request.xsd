@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://esb.sn/esmt" xmlns:tns="http://esb.sn/esmt" elementFormDefault="qualified">
+           targetNamespace="http://esmt.sn/gesb/xml" xmlns:tns="http://esmt.sn/gesb/xml" elementFormDefault="qualified">
     <xs:element name="actionResponse">
         <xs:complexType>
             <xs:sequence>
