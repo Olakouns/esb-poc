@@ -2,6 +2,7 @@ package sn.esmt.gesb.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
