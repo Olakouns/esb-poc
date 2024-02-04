@@ -3,7 +3,6 @@ package sn.esmt.gesb.config;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
@@ -21,14 +20,14 @@ import java.util.List;
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
 
-//    @Override
-//    public void addInterceptors(List<EndpointInterceptor> interceptors) {
-//        PayloadValidatingInterceptor validatingInterceptor = new PayloadValidatingInterceptor();
-//        validatingInterceptor.setValidateRequest(true);
-//        validatingInterceptor.setValidateResponse(true);
-//        validatingInterceptor.setXsdSchema(esbSchema());
-//        interceptors.add(validatingInterceptor);
-//    }
+    @Override
+    public void addInterceptors(List<EndpointInterceptor> interceptors) {
+        PayloadValidatingInterceptor validatingInterceptor = new PayloadValidatingInterceptor();
+        validatingInterceptor.setValidateRequest(true);
+        validatingInterceptor.setValidateResponse(true);
+        validatingInterceptor.setXsdSchema(esbSchema());
+        interceptors.add(validatingInterceptor);
+    }
 
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
@@ -50,6 +49,6 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 
     @Bean
     public XsdSchema esbSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("request.xsd"));
+        return new SimpleXsdSchema(new ClassPathResource("gesb.xsd"));
     }
 }

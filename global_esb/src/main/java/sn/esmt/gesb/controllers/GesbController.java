@@ -1,31 +1,52 @@
 package sn.esmt.gesb.controllers;
 
 
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.context.request.async.DeferredResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-
+import org.springframework.ws.soap.SoapFaultException;
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.addressing.server.annotation.Action;
+import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
-import sn.esmt.gesb.services.Impl.CoreService;
-import sn.esmt.gesb.services.RequestProcessorService;
-//import sn.esmt.gesb.wsdl.*;
+import sn.esmt.gesb.components.QueueManagerComponent;
+import sn.esmt.gesb.soam.EsbRootActionRequest;
+import sn.esmt.gesb.soam.EsbRootActionResponse;
 
 @Endpoint
 @RequiredArgsConstructor
+@Slf4j
 public class GesbController {
 
-    private static final String NAMESPACE_URI = "http://esb.sn/esmt";
-    private final CoreService coreService;
+    private static final String NAMESPACE_URI = "http://esmt.sn/gesb/soam";
+    private final QueueManagerComponent queueManagerComponent;
 
-//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "actionRequest")
-//    @ResponsePayload
-//    public ActionResponse processRequest(@RequestPayload ActionRequest actionRequest,
-//                                         @SoapHeader(value = "{" + NAMESPACE_URI + "}callbackURI") SoapHeaderElement callbackHeader){
-//        return  coreService.processRequest(actionRequest);
-//    }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "esbRootActionRequest")
+    @ResponsePayload
+    public EsbRootActionResponse processRequest(@RequestPayload EsbRootActionRequest esbRootActionRequest,
+                                                @SoapHeader(value = "{" + NAMESPACE_URI + "}callbackURL") SoapHeaderElement soapHeaderElement) {
+
+        if (soapHeaderElement == null || StringUtils.isBlank(soapHeaderElement.getText())) {
+            throw new SoapFaultException("Callback URL is required but not provided.");
+        }
+
+        if (queueManagerComponent.getQueueSize() >= queueManagerComponent.MAX_QUEUE_SIZE) {
+            throw new SoapFaultException("Queue is full");
+        }
+
+        queueManagerComponent.enqueue(esbRootActionRequest);
+
+        log.info("Get request from client: {}", esbRootActionRequest);
+        return createTemplateResponse();
+    }
+
+    private EsbRootActionResponse createTemplateResponse() {
+        EsbRootActionResponse response = new EsbRootActionResponse();
+        response.setSuccess(true);
+        response.setMessage("Request received");
+        return response;
+    }
 }

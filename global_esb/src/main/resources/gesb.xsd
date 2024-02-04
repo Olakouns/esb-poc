@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://esmt.sn/gesb/soam" xmlns:tns="http://esmt.sn/gesb/soam" elementFormDefault="qualified">
+           targetNamespace="http://esmt.sn/gesb/soam" xmlns:tns="http://esmt.sn/gesb/soam"
+           elementFormDefault="qualified">
+    <xs:element name="esbRootActionResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="esbRootActionRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="esbContent" type="tns:EsbContent"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
+    <xs:complexType name="EsbContent">
+        <xs:sequence>
+            <xs:element name="esbParameter" type="tns:EsbParameter" maxOccurs="unbounded"/>
+            <xs:element name="esbServices" type="tns:EsbServices" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="verb" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="EsbParameter">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="newValue" type="xs:string" use="optional"/>
+        <xs:attribute name="oldValue" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="EsbServices">
+        <xs:sequence>
+            <xs:element name="esbService" type="tns:EsbService" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EsbService">
+        <xs:sequence>
+            <xs:element name="esbParameter" type="tns:EsbParameter" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="verb" type="xs:string" use="required"/>
+    </xs:complexType>
 </xs:schema>

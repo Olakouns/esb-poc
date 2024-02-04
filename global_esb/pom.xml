@@ -98,7 +98,7 @@
                 </executions>
                 <configuration>
                     <sources>
-                        <source>src/main/resources/request.xsd</source>
+                        <source>src/main/resources/gesb.xsd</source>
                     </sources>
                     <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
 <!--                    <packageName>sn.esmt.gesb.wsdl</packageName>-->
