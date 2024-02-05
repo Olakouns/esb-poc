@@ -8,5 +8,4 @@ public class GlobalEsbApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GlobalEsbApplication.class, args);
 	}
-
 }
