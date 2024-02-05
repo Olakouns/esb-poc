@@ -1,22 +1,20 @@
-package sn.esmt.models;
+package sn.esmt.gesb.tpo_manager.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 public class TPOData {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String resource;
     private String verb;
     private String condition;
     private String tpo;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TPOPattern> patterns = new LinkedList<>();
+    private List<TPOWordOrder> patterns = new LinkedList<>();
+    @ManyToOne
+    private TPOData tpoDataOnFailure;
 }

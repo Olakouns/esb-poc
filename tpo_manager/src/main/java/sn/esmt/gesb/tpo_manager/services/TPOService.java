@@ -1,7 +1,9 @@
 package sn.esmt.gesb.tpo_manager.services;
 
-import sn.esmt.models.TPOData;
+import sn.esmt.gesb.dto.TPODataDto;
+import sn.esmt.gesb.soam.EsbRootActionRequest;
+import sn.esmt.gesb.tpo_manager.models.TPOData;
 
 public interface TPOService {
-    TPOData getTPODataOfRequest(String request);
+    TPODataDto getTPODataOfRequest(EsbRootActionRequest esbRootActionRequest);
 }
