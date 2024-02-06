@@ -12,6 +12,7 @@ public class TPOWordOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String webServiceName;
+    @Column(columnDefinition = "TEXT")
     private String template;
     private String equipment;
 }

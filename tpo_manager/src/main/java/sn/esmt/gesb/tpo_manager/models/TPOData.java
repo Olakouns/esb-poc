@@ -13,6 +13,8 @@ public class TPOData {
     private String verb;
     private String condition;
     private String tpo;
+    @Column(columnDefinition = "TEXT")
+    private String description;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TPOWordOrder> patterns = new LinkedList<>();
     @ManyToOne

@@ -15,6 +15,7 @@ import java.util.List;
 public class TPODataDto {
     private int id;
     private String tpo;
+    private String description;
     private List<TPOWordOrderDto> patterns;
     private TPODataDto tpoDataOnFailure;
 }
