@@ -22,7 +22,14 @@ public class RequestProcessor {
 
     public void processRequest(EsbRootActionRequest esbRootActionRequest) {
         log.info("Processing request: {}", esbRootActionRequest);
-        TPODataDto tpoDataDto = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager", esbRootActionRequest, TPODataDto.class);
+        try{
+            TPODataDto tpoDataDto = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager", esbRootActionRequest, TPODataDto.class);
+            assert tpoDataDto != null;
+            log.info("TPODataDto: {}", tpoDataDto.getTpo());
+            // todo: send TPODataDto to the client
+        }catch (Exception e){
+            log.error("Error processing request: {}", e.getMessage());
+        }
 
     }
 }

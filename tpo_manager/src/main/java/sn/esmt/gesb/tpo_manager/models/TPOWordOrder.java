@@ -2,6 +2,7 @@ package sn.esmt.gesb.tpo_manager.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,8 +13,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TPOWordOrder {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

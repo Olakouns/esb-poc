@@ -49,18 +49,25 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     }
 
     @Override
-    public TPOData updateTpoData(int id, TPOData tpoData) {
-        return null;
+    public TPOData updateTpoData(int tpoDataId, TPOData tpoData) {
+        TPOData tpoDataDB = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
+        tpoDataDB.setTpo(tpoData.getTpo());
+        tpoDataDB.setTpoCondition(tpoData.getTpoCondition());
+        tpoDataDB.setTpoDataOnFailure(tpoData.getTpoDataOnFailure());
+        tpoDataDB.setDescription(tpoData.getDescription());
+        return tpoDataRepository.save(tpoDataDB);
     }
 
     @Override
-    public ApiResponse deleteTpoData(int id) {
-        return null;
+    public ApiResponse deleteTpoData(int tpoDataId) {
+        TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
+        tpoDataRepository.delete(tpoData);
+        return new ApiResponse(true, "TPOData deleted successfully");
     }
 
     @Override
     public List<TPOWordOrder> getAllTpoWordOrder(int tpoDataId) {
-        return null;
+        return tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId)).getPatterns();
     }
 
     @Override
