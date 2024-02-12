@@ -10,8 +10,10 @@ import sn.esmt.gesb.soam.EsbRootActionRequest;
 import sn.esmt.gesb.soam.VerbType;
 import sn.esmt.gesb.tpo_manager.exceptions.ResourceNotFoundException;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
+import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,5 +37,10 @@ public class TPOServiceImpl implements TPOService {
             specification.and((root, query, criteriaBuilder) -> criteriaBuilder.isNull(root.get("condition")));
         }
         return modelMapper.map(tpoDataRepository.findOne(specification).orElseThrow(() -> new ResourceNotFoundException("TPOData", "verb", verb.name())), TPODataDto.class);
+    }
+
+    @Override
+    public List<TPOWorkOrder> getMappingData(int tpoId, EsbRootActionRequest esbRootActionRequest) {
+        return null;
     }
 }

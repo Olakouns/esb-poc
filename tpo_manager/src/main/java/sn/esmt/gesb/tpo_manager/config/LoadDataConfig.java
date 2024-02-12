@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
-import sn.esmt.gesb.tpo_manager.models.TPOWordOrder;
+import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
 
@@ -37,7 +37,7 @@ public class LoadDataConfig {
         tpoOnFailure.setTpo("TPO_CREATE_SUBSCRIBER_PRE_PAID_FAILURE");
         tpoOnFailure.setDescription("Delete a post paid subscriber");
         tpoOnFailure.setVerb("DELETE");
-        tpoOnFailure.setPatterns(List.of(TPOWordOrder.builder()
+        tpoOnFailure.setPatterns(List.of(TPOWorkOrder.builder()
                 .equipment("HLR")
                 .template("<subscriber><msisdn>${imsi}</msisdn></subscriber>")
                 .webServiceName("DeleteSubscriber")
@@ -49,19 +49,19 @@ public class LoadDataConfig {
         tpoData.setDescription("Create a post paid subscriber");
         tpoData.setVerb("ADD");
         tpoData.setTpoCondition("POST_PAID");
-        tpoData.setTpoDataOnFailure(tpoOnFailure);
+//        tpoData.setTpoDataOnFailure(tpoOnFailure);
         tpoData.setPatterns(List.of(
-                TPOWordOrder.builder()
+                TPOWorkOrder.builder()
                         .equipment("HLR")
                         .template("<subscriber>\n" +
                                 "\t<name>${subscriberName}</name>\n" +
                                 "\t<phone>${phoneNumber}</phone>\n" +
-                                "\t<type>${subscriberType}</phone>\n" +
+                                "\t<type>${subscriberType}</type>\n" +
                                 "\t<imsi>${imsi}</imsi>\n" +
                                 "</subscriber>")
                         .webServiceName("ActivateSubscriber")
                         .build(),
-                TPOWordOrder.builder()
+                TPOWorkOrder.builder()
                         .equipment("HLR")
                         .template("<serviceRoot phone=\"${phoneNumber}\" imsi=\"${imsi}\">\n" +
                                 "\t\t<service>\n" +

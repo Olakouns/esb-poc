@@ -3,7 +3,7 @@ package sn.esmt.gesb.tpo_manager.services;
 import org.springframework.data.domain.Page;
 import sn.esmt.gesb.dto.ApiResponse;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
-import sn.esmt.gesb.tpo_manager.models.TPOWordOrder;
+import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 
 import java.util.List;
 
@@ -19,13 +19,13 @@ public interface TpoAdminService {
     ApiResponse deleteTpoData(int id);
 
 
-    List<TPOWordOrder> getAllTpoWordOrder(int tpoDataId);
+    List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId);
 
-    ApiResponse addTpoWordOrder(int tpoDataId, TPOWordOrder tpoWordOrder);
+    ApiResponse addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder);
     ApiResponse addTpoWordOrderById(int tpoDataId, int tpoWordOrderId);
     ApiResponse removeTpoWordOrder(int tpoDataId, int tpoWordOrderId);
 
-    TPOWordOrder updateTpoWordOrder(int tpoWordOrderId, TPOWordOrder tpoWordOrder);
+    TPOWorkOrder updateTpoWordOrder(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
 
     ApiResponse deleteTpoWordOrder(int tpoWordOrderId);
 }

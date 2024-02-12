@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -16,6 +15,5 @@ public class TPODataDto {
     private int id;
     private String tpo;
     private String description;
-    private List<TPOWordOrderDto> patterns;
-    private TPODataDto tpoDataOnFailure;
+    private List<TPOWorkOrderDto> patterns;
 }

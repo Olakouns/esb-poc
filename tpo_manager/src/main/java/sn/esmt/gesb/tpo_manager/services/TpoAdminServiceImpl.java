@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import sn.esmt.gesb.dto.ApiResponse;
 import sn.esmt.gesb.tpo_manager.exceptions.ResourceNotFoundException;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
-import sn.esmt.gesb.tpo_manager.models.TPOWordOrder;
+import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
 
@@ -53,7 +53,8 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         TPOData tpoDataDB = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
         tpoDataDB.setTpo(tpoData.getTpo());
         tpoDataDB.setTpoCondition(tpoData.getTpoCondition());
-        tpoDataDB.setTpoDataOnFailure(tpoData.getTpoDataOnFailure());
+        // todo : to be reviewed
+//        tpoDataDB.setTpoDataOnFailure(tpoData.getTpoDataOnFailure());
         tpoDataDB.setDescription(tpoData.getDescription());
         return tpoDataRepository.save(tpoDataDB);
     }
@@ -66,12 +67,12 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     }
 
     @Override
-    public List<TPOWordOrder> getAllTpoWordOrder(int tpoDataId) {
+    public List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId) {
         return tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId)).getPatterns();
     }
 
     @Override
-    public ApiResponse addTpoWordOrder(int tpoDataId, TPOWordOrder tpoWordOrder) {
+    public ApiResponse addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder) {
         if (tpoWordOrder.getId() == 0) {
             tpoWordOrder = tpoWordOrderRepository.save(tpoWordOrder);
         }
@@ -81,7 +82,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     @Override
     public ApiResponse addTpoWordOrderById(int tpoDataId, int tpoWordOrderId) {
         TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
-        TPOWordOrder tpoWordOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
+        TPOWorkOrder tpoWordOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
         tpoData.getPatterns().add(tpoWordOrder);
         return new ApiResponse(true, "TPOWordOrder added successfully");
     }
@@ -94,8 +95,8 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     }
 
     @Override
-    public TPOWordOrder updateTpoWordOrder(int tpoWordOrderId, TPOWordOrder tpoWordOrder) {
-        TPOWordOrder tpoWordOrderDB = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
+    public TPOWorkOrder updateTpoWordOrder(int tpoWordOrderId, TPOWorkOrder tpoWordOrder) {
+        TPOWorkOrder tpoWordOrderDB = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
         tpoWordOrderDB.setEquipment(tpoWordOrder.getEquipment());
         tpoWordOrderDB.setTemplate(tpoWordOrder.getTemplate());
         tpoWordOrderDB.setWebServiceName(tpoWordOrder.getWebServiceName());
@@ -104,7 +105,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
     @Override
     public ApiResponse deleteTpoWordOrder(int tpoWordOrderId) {
-        TPOWordOrder tpoWordOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
+        TPOWorkOrder tpoWordOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
         tpoWordOrderRepository.delete(tpoWordOrder);
         return new ApiResponse(true, "TPOWordOrder deleted successfully");
     }

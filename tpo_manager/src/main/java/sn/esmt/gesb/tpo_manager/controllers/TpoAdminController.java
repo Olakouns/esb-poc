@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import sn.esmt.gesb.dto.ApiResponse;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
-import sn.esmt.gesb.tpo_manager.models.TPOWordOrder;
+import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.services.TpoAdminService;
 
 import java.util.List;
@@ -49,12 +49,12 @@ public class TpoAdminController {
 
 
     @GetMapping("/tpo-data/{tpoDataId}/tpo-word-order")
-    public List<TPOWordOrder> getAllTpoWordOrder(@PathVariable int tpoDataId) {
+    public List<TPOWorkOrder> getAllTpoWordOrder(@PathVariable int tpoDataId) {
         return tpoAdminService.getAllTpoWordOrder(tpoDataId);
     }
 
     @PutMapping("/tpo-data/{tpoDataId}/tpo-word-order")
-    public ApiResponse addTpoWordOrder(@PathVariable int tpoDataId, @RequestBody TPOWordOrder tpoWordOrder) {
+    public ApiResponse addTpoWordOrder(@PathVariable int tpoDataId, @RequestBody TPOWorkOrder tpoWordOrder) {
         return tpoAdminService.addTpoWordOrder(tpoDataId, tpoWordOrder);
     }
 
@@ -69,7 +69,7 @@ public class TpoAdminController {
     }
 
     @PutMapping("/tpo-word-order/{tpoWordOrderId}")
-    public TPOWordOrder updateTpoWordOrder(@PathVariable int tpoWordOrderId, @RequestBody TPOWordOrder tpoWordOrder) {
+    public TPOWorkOrder updateTpoWordOrder(@PathVariable int tpoWordOrderId, @RequestBody TPOWorkOrder tpoWordOrder) {
         return tpoAdminService.updateTpoWordOrder(tpoWordOrderId, tpoWordOrder);
     }
 

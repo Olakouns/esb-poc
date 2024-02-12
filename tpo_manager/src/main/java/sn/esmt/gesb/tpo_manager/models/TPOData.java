@@ -29,8 +29,8 @@ public class TPOData {
     private String description;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
-    private List<TPOWordOrder> patterns = new LinkedList<>();
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "tpo_data_on_failure_id")
-    private TPOData tpoDataOnFailure;
+    private List<TPOWorkOrder> patterns = new LinkedList<>();
+//    @ManyToOne(cascade = CascadeType.PERSIST)
+//    @JoinColumn(name = "tpo_data_on_failure_id")
+//    private TPOData tpoDataOnFailure;
 }
