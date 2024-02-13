@@ -16,8 +16,8 @@ import sn.esmt.in_api.soam.*;
 @Slf4j
 public class BaseController {
 
-    private BaseService baseService;
-    private ObjectFactory objectFactory = new ObjectFactory();
+    private final BaseService baseService;
+    private ObjectFactory objectFactory;
 
     private static final String NAMESPACE_URI = "http://esmt.sn/in_api/soam";
 
