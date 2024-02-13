@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://esmt.sn/in_api/soam" xmlns:tns="http://esmt.sn/in_api/soam"
+           elementFormDefault="qualified">
+    <xs:element name="newConnectionRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="phoneNumber" type="xs:string"/>
+                <xs:element name="imsi" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="newConnectionResponse" type="tns:ApiResponse"/>
+
+    <xs:element name="rechargingRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dataBalance" type="xs:double"/>
+                <xs:element name="callBalance" type="xs:double"/>
+                <xs:element name="smsBalance" type="xs:double"/>
+            </xs:sequence>
+            <xs:attribute name="phoneNumber" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="rechargingResponse" type="tns:ApiResponse"/>
+
+    <xs:element name="terminationRequest">
+        <xs:complexType>
+            <xs:attribute name="phoneNumber" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="terminationResponse" type="tns:ApiResponse"/>
+
+    <xs:complexType name="ApiResponse">
+        <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            <xs:element name="message" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

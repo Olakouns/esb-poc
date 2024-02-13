@@ -11,6 +11,8 @@
     <modules>
         <module>global_esb</module>
         <module>share_module</module>
+        <module>in_api</module>
+        <module>tpo_manager</module>
     </modules>
 
     <properties>

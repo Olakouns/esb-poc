@@ -37,16 +37,16 @@ class GlobalEsbApplicationTests {
 	void shouldTestSOAPRequest(){
 		SoapMessageFactory messageFactory = new SaajSoapMessageFactory();
 
-		String request = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-				"<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-				"    <Body>\n" +
-				"        <esbRootActionRequest xmlns=\"http://esmt.sn/gesb/soam\" requestId=\"1235478\">\n" +
-				"            <esbContent verb=\"ADD\">\n" +
-				"                <esbParameter name=\"ola\" newValue=\"HI\"/>\n" +
-				"            </esbContent>\n" +
-				"        </esbRootActionRequest>\n" +
-				"    </Body>\n" +
-				"</Envelope>";
+//		String request = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+//				"<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+//				"    <Body>\n" +
+//				"        <esbRootActionRequest xmlns=\"http://esmt.sn/gesb/soam\" requestId=\"1235478\">\n" +
+//				"            <esbContent verb=\"ADD\">\n" +
+//				"                <esbParameter name=\"ola\" newValue=\"HI\"/>\n" +
+//				"            </esbContent>\n" +
+//				"        </esbRootActionRequest>\n" +
+//				"    </Body>\n" +
+//				"</Envelope>";
 
 		String request2 = "<esbRootActionRequest xmlns=\"http://esmt.sn/gesb/soam\" requestId=\"1235478\">\n" +
 				"            <esbContent verb=\"ADD\">\n" +
