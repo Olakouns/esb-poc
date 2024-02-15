@@ -1,6 +1,7 @@
 package sn.esmt.gesb;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,13 +49,13 @@ class GlobalEsbApplicationTests {
 //				"    </Body>\n" +
 //				"</Envelope>";
 
-		String request2 = "<esbRootActionRequest xmlns=\"http://esmt.sn/gesb/soam\" requestId=\"1235478\">\n" +
+		String request2 = "<newConnectionRequest xmlns=\"http://esmt.sn/in_api/soam\" requestId=\"1235478\">\n" +
 				"            <esbContent verb=\"ADD\">\n" +
 				"                <esbParameter name=\"ola\" newValue=\"HI\"/>\n" +
 				"            </esbContent>\n" +
-				"        </esbRootActionRequest>";
+				"        </newConnectionRequest>";
 		try{
-			DOMResult result =  soapClientService.sendSoapRequestA(request2);
+			DOMResult result =  soapClientService.sendSoapRequestA("http://localhost:8091/ws", request2);
 			System.out.println("ICI");
 
 			Node resultNode = result.getNode();
@@ -96,7 +97,10 @@ class GlobalEsbApplicationTests {
 			}
 		}catch (Exception e){
 			System.out.println(e.getMessage());
+			Assertions.assertEquals("1", e.getMessage());
+
 		}
+
 
 	}
 

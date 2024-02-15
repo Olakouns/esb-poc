@@ -23,11 +23,11 @@ public class SoapClientService {
         return webServiceTemplate.marshalSendAndReceive(request);
     }
 
-    public DOMResult sendSoapRequestA(String request) {
+    public DOMResult sendSoapRequestA(String serverUri, String request) {
         StreamSource source = new StreamSource(new StringReader(request));
         StreamResult result = new StreamResult(System.out);
         DOMResult responseResult = new DOMResult();
-        webServiceTemplate.sendSourceAndReceiveToResult(source, responseResult);
+        webServiceTemplate.sendSourceAndReceiveToResult(serverUri, source, responseResult);
         return  responseResult;
     }
 }

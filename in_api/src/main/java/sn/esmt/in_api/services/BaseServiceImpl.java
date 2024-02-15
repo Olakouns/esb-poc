@@ -2,6 +2,7 @@ package sn.esmt.in_api.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import sn.esmt.in_api.exceptions.CustomSoapException;
 import sn.esmt.in_api.models.SubscriberUser;
 import sn.esmt.in_api.repositories.SubscriberUserRepository;
 import sn.esmt.in_api.soam.ApiResponse;
@@ -29,7 +30,8 @@ public class BaseServiceImpl implements BaseService {
                 .build();
 
         if (subscriberUserRepository.existsByPhoneNumber(subscriberUser.getPhoneNumber())) {
-            return new ApiResponse(false, "PhoneNumber : " + subscriberUser.getPhoneNumber() + " already exist");
+            throw new CustomSoapException("NewConnectionRequest", "PhoneNumber", subscriberUser.getPhoneNumber());
+//            return new ApiResponse(false, "PhoneNumber : " + subscriberUser.getPhoneNumber() + " already exist");
         }
 
         subscriberUserRepository.save(subscriberUser);

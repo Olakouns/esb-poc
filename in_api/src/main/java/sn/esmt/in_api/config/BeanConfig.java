@@ -1,5 +1,6 @@
 package sn.esmt.in_api.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import sn.esmt.in_api.soam.ObjectFactory;
