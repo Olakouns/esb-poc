@@ -20,14 +20,14 @@ import java.util.List;
 @Configuration
 public class SoapServerConfig extends WsConfigurerAdapter {
 
-//    @Override
-//    public void addInterceptors(List<EndpointInterceptor> interceptors) {
-//        PayloadValidatingInterceptor validatingInterceptor = new PayloadValidatingInterceptor();
-//        validatingInterceptor.setValidateRequest(true);
-//        validatingInterceptor.setValidateResponse(true);
-//        validatingInterceptor.setXsdSchema(esbSchema());
-//        interceptors.add(validatingInterceptor);
-//    }
+    @Override
+    public void addInterceptors(List<EndpointInterceptor> interceptors) {
+        PayloadValidatingInterceptor validatingInterceptor = new PayloadValidatingInterceptor();
+        validatingInterceptor.setValidateRequest(true);
+        validatingInterceptor.setValidateResponse(true);
+        validatingInterceptor.setXsdSchema(esbSchema());
+        interceptors.add(validatingInterceptor);
+    }
 
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {

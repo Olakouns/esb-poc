@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import sn.esmt.gesb.dto.TPODataDto;
+import sn.esmt.gesb.dto.Workflow;
 import sn.esmt.gesb.soam.EsbRootActionRequest;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
@@ -26,9 +27,9 @@ public class TPOController {
         return tpoService.getTPODataOfRequest(esbRootActionRequest);
     }
 
-    @PutMapping("{tpoId}")
-    public List<TPOWorkOrder> getMappingData(@PathVariable int tpoId, @RequestBody EsbRootActionRequest esbRootActionRequest) {
-        log.info("Start tpo template mapping" + esbRootActionRequest.getRequestId());
+    @PostMapping("{tpoId}/mapping")
+    public Workflow getMappingData(@PathVariable int tpoId, @RequestBody EsbRootActionRequest esbRootActionRequest) {
+        log.info("Start tpo template mapping " + esbRootActionRequest.getRequestId());
         return tpoService.getMappingData(tpoId, esbRootActionRequest);
     }
 }

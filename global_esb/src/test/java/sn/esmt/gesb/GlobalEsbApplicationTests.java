@@ -1,10 +1,15 @@
 package sn.esmt.gesb;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
@@ -14,6 +19,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import sn.esmt.gesb.services.Impl.SoapClientService;
+import sn.esmt.gesb.services.Impl.YourClassWithRetryLogic;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -25,10 +31,13 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.StringWriter;
 
 @SpringBootTest
+@EnableRetry
 class GlobalEsbApplicationTests {
 
 	@Autowired
 	private SoapClientService soapClientService;
+	@Autowired
+	private YourClassWithRetryLogic yourClassWithRetryLogic;
 
     @Test
 	void contextLoads() {
@@ -55,7 +64,7 @@ class GlobalEsbApplicationTests {
 				"            </esbContent>\n" +
 				"        </newConnectionRequest>";
 		try{
-			DOMResult result =  soapClientService.sendSoapRequestA("http://localhost:8091/ws", request2);
+			DOMResult result =  soapClientService.sendSoapRequest("http://localhost:8091/ws", request2);
 			System.out.println("ICI");
 
 			Node resultNode = result.getNode();
@@ -111,6 +120,13 @@ class GlobalEsbApplicationTests {
 			return nodeList.item(0).getTextContent();
 		}
 		return null;
+	}
+
+	@Test
+	void shouldTestRetry(){
+		for (int i = 0; i < 10; i++) {
+			yourClassWithRetryLogic.retry(i);
+		}
 	}
 
 }

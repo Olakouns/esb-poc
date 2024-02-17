@@ -19,15 +19,13 @@ public class SoapClientService {
 
     private final WebServiceTemplate webServiceTemplate;
 
-    public Object sendSoapRequest(Object request) {
-        return webServiceTemplate.marshalSendAndReceive(request);
-    }
+//    public Object sendSoapRequest(Object request) {
+//        return webServiceTemplate.marshalSendAndReceive(request);
+//    }
 
-    public DOMResult sendSoapRequestA(String serverUri, String request) {
-        StreamSource source = new StreamSource(new StringReader(request));
-        StreamResult result = new StreamResult(System.out);
+    public DOMResult sendSoapRequest(String serverUri, String request) {
         DOMResult responseResult = new DOMResult();
-        webServiceTemplate.sendSourceAndReceiveToResult(serverUri, source, responseResult);
-        return  responseResult;
+        webServiceTemplate.sendSourceAndReceiveToResult(serverUri, new StreamSource(new StringReader(request)), responseResult);
+        return responseResult;
     }
 }

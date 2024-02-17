@@ -5,8 +5,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
+import sn.esmt.gesb.tpo_manager.repositories.ConstantConfigRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
 
@@ -19,47 +21,39 @@ public class LoadDataConfig {
 
     private final TPODataRepository tpoDataRepository;
     private final TPOWordOrderRepository tpoWordOrderRepository;
+    private final ConstantConfigRepository constantConfigRepository;
 
     @PostConstruct
     private void loadData() {
         log.info("Loading data...");
+        tpoDataRepository.deleteAll();
+
         if (tpoDataRepository.count() == 0) {
             createTPOData();
         }
-        if (tpoWordOrderRepository.count() == 0) {
-            createTPOWordOrder();
+
+        if (constantConfigRepository.count() == 0) {
+            createConstantConfig();
         }
     }
 
     private void createTPOData() {
         log.info("Creating TPOData...");
-        TPOData tpoOnFailure = new TPOData();
-        tpoOnFailure.setTpo("TPO_CREATE_SUBSCRIBER_PRE_PAID_FAILURE");
-        tpoOnFailure.setDescription("Delete a post paid subscriber");
-        tpoOnFailure.setVerb("DELETE");
-        tpoOnFailure.setPatterns(List.of(TPOWorkOrder.builder()
-                .equipment("HLR")
-                .template("<subscriber><msisdn>${imsi}</msisdn></subscriber>")
-                .webServiceName("DeleteSubscriber")
-                .build()));
-
 
         TPOData tpoData = new TPOData();
-        tpoData.setTpo("TPO_CREATE_SUBSCRIBER_POST_PAID");
-        tpoData.setDescription("Create a post paid subscriber");
+        tpoData.setTpo("TPO_CREATE_SUBSCRIBER_PRE_PAID");
+        tpoData.setDescription("Create a pre paid subscriber");
         tpoData.setVerb("ADD");
-        tpoData.setTpoCondition("POST_PAID");
-//        tpoData.setTpoDataOnFailure(tpoOnFailure);
+        tpoData.setTpoCondition("PRE_PAID");
         tpoData.setPatterns(List.of(
                 TPOWorkOrder.builder()
-                        .equipment("HLR")
-                        .template("<subscriber>\n" +
+                        .equipment("IN")
+                        .template("<newConnectionRequest xmlns=\"http://esmt.sn/in_api/soam\">\n" +
                                 "\t<name>${subscriberName}</name>\n" +
-                                "\t<phone>${phoneNumber}</phone>\n" +
-                                "\t<type>${subscriberType}</type>\n" +
-                                "\t<imsi>${imsi}</imsi>\n" +
-                                "</subscriber>")
-                        .webServiceName("ActivateSubscriber")
+                                "        <phoneNumber>${phoneNumber}</phoneNumber>\n" +
+                                "        <imsi>${imsi}</imsi>\n" +
+                                "</newConnectionRequest>")
+                        .webServiceName("newConnectionRequest")
                         .build(),
                 TPOWorkOrder.builder()
                         .equipment("HLR")
@@ -75,7 +69,19 @@ public class LoadDataConfig {
         tpoDataRepository.save(tpoData);
     }
 
-    private void createTPOWordOrder() {
-        log.info("Creating TPOWordOrder...");
+    private void createConstantConfig() {
+        log.info("Creating ConstantConfig...");
+        ConstantConfig constantConfigIN = ConstantConfig
+                .builder()
+                .keyName("IN")
+                .valueContent("http://localhost:8091/ws")
+                .build();
+
+        ConstantConfig constantConfigHLR = ConstantConfig
+                .builder()
+                .keyName("HLR")
+                .valueContent("http://localhost:8092/ws")
+                .build();
+        constantConfigRepository.saveAll(List.of(constantConfigIN, constantConfigHLR));
     }
 }

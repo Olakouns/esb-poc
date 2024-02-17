@@ -24,7 +24,7 @@ public class BaseController {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "newConnectionRequest")
     @ResponsePayload
     public JAXBElement<ApiResponse> newConnection(@RequestPayload NewConnectionRequest newConnectionRequest) {
-        log.info("Get request from client: {}", newConnectionRequest);
+        log.info("Get request from client: {}", newConnectionRequest.getImsi());
         return objectFactory.createNewConnectionResponse(baseService.newConnection(newConnectionRequest));
     }
 
