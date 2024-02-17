@@ -31,7 +31,6 @@ public class BaseServiceImpl implements BaseService {
 
         if (subscriberUserRepository.existsByPhoneNumber(subscriberUser.getPhoneNumber())) {
             throw new CustomSoapException("NewConnectionRequest", "PhoneNumber", subscriberUser.getPhoneNumber());
-//            return new ApiResponse(false, "PhoneNumber : " + subscriberUser.getPhoneNumber() + " already exist");
         }
 
         subscriberUserRepository.save(subscriberUser);
@@ -42,7 +41,7 @@ public class BaseServiceImpl implements BaseService {
     public ApiResponse termination(TerminationRequest terminationRequest) {
         Optional<SubscriberUser> userOptional = subscriberUserRepository.findByPhoneNumber(terminationRequest.getPhoneNumber());
         if (userOptional.isEmpty()) {
-            return new ApiResponse(false, "PhoneNumber : " + terminationRequest.getPhoneNumber() + " doesn't exist");
+            throw new CustomSoapException("SubscriberUser" , "PhoneNumber", terminationRequest.getPhoneNumber());
         }
         subscriberUserRepository.delete(userOptional.get());
         return new ApiResponse(true, "Termination done");
@@ -57,7 +56,7 @@ public class BaseServiceImpl implements BaseService {
     public ApiResponse recharging(RechargingRequest rechargingRequest) {
         Optional<SubscriberUser> userOptional = subscriberUserRepository.findByPhoneNumber(rechargingRequest.getPhoneNumber());
         if (userOptional.isEmpty()) {
-            return new ApiResponse(false, "PhoneNumber : " + rechargingRequest.getPhoneNumber() + " doesn't exist");
+            throw new CustomSoapException("SubscriberUser" , "PhoneNumber", rechargingRequest.getPhoneNumber());
         }
 
         SubscriberUser subscriberUser = userOptional.get();

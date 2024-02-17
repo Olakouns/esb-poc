@@ -22,7 +22,7 @@ public class TPOWorkOrder {
     @Column(columnDefinition = "TEXT")
     private String template;
     private String equipment;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tpo_work_failure_id")
     private List<TPOWorkOrder> tpoWorkOrderFailure;
 }

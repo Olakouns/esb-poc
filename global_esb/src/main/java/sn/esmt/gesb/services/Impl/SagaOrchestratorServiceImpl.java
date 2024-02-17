@@ -2,16 +2,11 @@ package sn.esmt.gesb.services.Impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Service;
-import sn.esmt.gesb.dto.TPOWorkOrderDto;
-import sn.esmt.gesb.dto.Workflow;
 import sn.esmt.gesb.dto.WorkflowStep;
 import sn.esmt.gesb.services.SagaOrchestratorService;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +17,7 @@ import java.util.List;
 public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
 
     private final SoapClientService soapClientService;
+    private final RequestRetryForFailure requestRetry;
 
     @Override
     public void executeSaga(List<WorkflowStep> workflowSteps, String callbackURL) {
@@ -49,19 +45,8 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
         }
 
         for (WorkflowStep action : actions) {
-            executeFailure(action);
+            requestRetry.executeFailure(action);
         }
         // TODO: 2/16/2024 send callback
-    }
-
-    @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 100))
-    public void executeFailure(WorkflowStep workflowStep) {
-        soapClientService.sendSoapRequest(workflowStep.getUrl(), workflowStep.getBodyContent());
-    }
-
-    @Recover
-    public void recover(Exception e, WorkflowStep workflowStep) {
-        log.error("Unable to execute failure " + workflowStep.getUrl() + " action: {}", e.getMessage());
-        // TODO: 2/16/2024 Save workflowStep to database and send notification and also launch a new thread to execute the action with cron job
     }
 }

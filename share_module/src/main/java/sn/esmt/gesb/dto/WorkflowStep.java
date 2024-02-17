@@ -14,5 +14,5 @@ import java.util.LinkedList;
 public class WorkflowStep {
     private String url;
     private String bodyContent;
-    private LinkedList<WorkflowStep> failureSteps;
+    private LinkedList<WorkflowStep> failureSteps = new LinkedList<>();
 }

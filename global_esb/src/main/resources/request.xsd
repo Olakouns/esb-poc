@@ -1,48 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://esb.sn/esmt" xmlns:tns="http://esb.sn/esmt" elementFormDefault="qualified">
-    <xs:element name="actionResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="data" type="xs:string"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="actionRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="actionParameter" type="tns:ActionParameterType" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element name="actionOffer" type="tns:ActionOfferType" maxOccurs="unbounded"/>
-            </xs:sequence>
-            <xs:attribute name="mainAction" type="xs:string" use="required"/>
-            <xs:attribute name="requestId" type="xs:string" use="required"/>
-            <xs:attribute name="senderId" type="xs:string" use="required"/>
-            <xs:attribute name="timeStamp" type="xs:string" use="optional"/>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:complexType name="ActionParameterType">
-        <xs:attribute name="paramName" type="xs:string" use="required"/>
-        <xs:attribute name="oldValue" type="xs:string" use="optional"/>
-        <xs:attribute name="newValue" type="xs:string" use="optional"/>
-    </xs:complexType>
-
-    <xs:complexType name="ActionOfferType">
-        <xs:sequence>
-            <xs:element name="actionParameter"  type="tns:ActionParameterType" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="actionService" type="tns:ActionServiceType" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="offerName" type="xs:string" use="required"/>
-        <xs:attribute name="verb" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="ActionServiceType">
-        <xs:sequence>
-            <xs:element name="actionParameter" type="tns:ActionParameterType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="serviceName" type="xs:string" use="required"/>
-        <xs:attribute name="verb" type="xs:string" use="required"/>
-    </xs:complexType>
-
-</xs:schema>
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Header >
+        <callbackURL xmlns="http://esmt.sn/gesb/soam">http://example.com/callback</callbackURL>
+    </Header>
+    <Body>
+        <esbRootActionRequest requestId="1235864" xmlns="http://esmt.sn/gesb/soam">
+            <esbContent verb="ADD">
+                <esbParameter name="subscriberName" newValue="Razacki" oldValue = "" />
+                <esbParameter name="phoneNumber" newValue="+221785900131" oldValue = "" />
+                <esbParameter name="subscriberType" newValue="PRE_PAID" oldValue = "" />
+                <esbParameter name="imsi" newValue="10547544" oldValue = "" />
+            </esbContent>
+        </esbRootActionRequest>
+    </Body>
+</Envelope>

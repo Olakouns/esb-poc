@@ -41,6 +41,8 @@ public class TPOServiceImpl implements TPOService {
         Optional<EsbParameter> esbParameterOptional = esbRootActionRequest.getEsbContent().getEsbParameter().stream().filter(esbParameter -> esbParameter.getName().equals("subscriberType")).findFirst();
         if (esbParameterOptional.isPresent()) {
             condition = esbParameterOptional.get().getName();
+        }else {
+            log.error("subscriberType not present");
         }
 
         Specification<TPOData> specification = (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("verb"), verb.name());
@@ -57,7 +59,7 @@ public class TPOServiceImpl implements TPOService {
         try {
             for (TPOWorkOrder pattern : tpoData.getPatterns()) {
                 WorkflowStep workflowStep = buildWorkflowStep(pattern, esbRootActionRequest);
-                if (pattern.getTpoWorkOrderFailure().size() > 0) {
+                if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
                     for (TPOWorkOrder tpoWorkOrderFailure : pattern.getTpoWorkOrderFailure()) {
                         WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbRootActionRequest);
                         workflowStep.getFailureSteps().add(workflowStepFailure);

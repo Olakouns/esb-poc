@@ -26,7 +26,8 @@ public class LoadDataConfig {
     @PostConstruct
     private void loadData() {
         log.info("Loading data...");
-        tpoDataRepository.deleteAll();
+//        tpoDataRepository.deleteAll();
+//        tpoWordOrderRepository.deleteAll();
 
         if (tpoDataRepository.count() == 0) {
             createTPOData();
@@ -54,6 +55,12 @@ public class LoadDataConfig {
                                 "        <imsi>${imsi}</imsi>\n" +
                                 "</newConnectionRequest>")
                         .webServiceName("newConnectionRequest")
+                        .tpoWorkOrderFailure(List.of(
+                                TPOWorkOrder.builder()
+                                        .equipment("IN")
+                                        .template("<terminationRequest phoneNumber=\"${phoneNumber}\" xmlns=\"http://esmt.sn/in_api/soam\"/>")
+                                        .webServiceName("termination").build()
+                        ))
                         .build(),
                 TPOWorkOrder.builder()
                         .equipment("HLR")
