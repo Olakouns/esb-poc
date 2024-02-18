@@ -13,6 +13,7 @@
         <module>share_module</module>
         <module>in_api</module>
         <module>tpo_manager</module>
+        <module>hlr_api</module>
     </modules>
 
     <properties>

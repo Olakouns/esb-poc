@@ -19,6 +19,7 @@ public class TPOWorkOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String webServiceName;
+    private boolean isServiceTemplate;
     @Column(columnDefinition = "TEXT")
     private String template;
     private String equipment;

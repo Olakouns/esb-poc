@@ -48,6 +48,35 @@ public class LoadDataConfig {
         tpoData.setTpoCondition("PRE_PAID");
         tpoData.setPatterns(List.of(
                 TPOWorkOrder.builder()
+                        .equipment("HLR")
+                        .webServiceName("ActivateSubscriber")
+                        .template("<activateSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\">\n" +
+                                "    <name>${subscriberName}</name>\n" +
+                                "    <phoneNumber>${phoneNumber}</phoneNumber>\n" +
+                                "    <imsi>${imsi}</imsi>\n" +
+                                "    <subscriberType>${subscriberType}</subscriberType>\n" +
+                                "</activateSubscriberRequest>")
+                        .tpoWorkOrderFailure(List.of(
+                                TPOWorkOrder.builder()
+                                        .equipment("HLR")
+                                        .webServiceName("deactivateSubscriber")
+                                        .template("<deactivateSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" />")
+                                        .build()
+                        ))
+                        .build(),
+                TPOWorkOrder.builder()
+                        .equipment("HLR")
+                        .webServiceName("ModifyService")
+                        .isServiceTemplate(true)
+                        .template("<modifyServiceSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\">\n" +
+                                "     <service>\n" +
+                                "         <serviceType>${serviceType}</serviceType>\n" +
+                                "         <targetNumber>${targetNumber}</targetNumber>\n" +
+                                "         <active>${active}</active>\n" +
+                                "     </service>\n" +
+                                "</modifyServiceSubscriberRequest>")
+                        .build(),
+                TPOWorkOrder.builder()
                         .equipment("IN")
                         .template("<newConnectionRequest xmlns=\"http://esmt.sn/in_api/soam\">\n" +
                                 "\t<name>${subscriberName}</name>\n" +
@@ -63,16 +92,15 @@ public class LoadDataConfig {
                         ))
                         .build(),
                 TPOWorkOrder.builder()
-                        .equipment("HLR")
-                        .template("<serviceRoot phone=\"${phoneNumber}\" imsi=\"${imsi}\">\n" +
-                                "\t\t<service>\n" +
-                                "\t\t\t\t<name>${serviceName}</name>\n" +
-                                "\t\t\t\t<activate>${activate}</activate>\n" +
-                                "\t\t\t\t<target>${targetNumber}</target>\n" +
-                                "\t\t</service>\n" +
-                                "</serviceRoot>\n")
-                        .webServiceName("ModifyService")
-                        .build()));
+                        .equipment("IN")
+                        .webServiceName("recharging")
+                        .template("<rechargingRequest xmlns=\"http://esmt.sn/in_api/soam\" phoneNumber=\"${phoneNumber}\">\n" +
+                                "     <dataBalance>${dataBalance}</dataBalance>\n" +
+                                "     <callBalance>${callBalance}</callBalance>\n" +
+                                "     <smsBalance>${smsBalance}</smsBalance>\n" +
+                                "</rechargingRequest>")
+                        .build()
+        ));
         tpoDataRepository.save(tpoData);
     }
 

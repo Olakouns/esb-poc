@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://esmt.sn/hlr_api/soam" xmlns:tns="http://esmt.sn/hlr_api/soam"
+           elementFormDefault="qualified">
+
+    <xs:element name="activateSubscriberRequest" type="tns:SubscriberData"/>
+
+    <xs:element name="activateSubscriberResponse" type="tns:ApiResponse"/>
+
+    <xs:element name="deactivateSubscriberRequest">
+        <xs:complexType>
+            <xs:attribute name="phoneNumber" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deactivateSubscriberResponse" type="tns:ApiResponse"/>
+
+    <xs:element name="displaySubscriberRequest">
+        <xs:complexType>
+            <xs:attribute name="phoneNumber" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="displaySubscriberResponse" type="tns:SubscriberData"/>
+
+    <xs:element name="modifyServiceSubscriberRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="service" type="tns:Service"/>
+            </xs:sequence>
+            <xs:attribute name="phoneNumber" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="modifyServiceSubscriberResponse" type="tns:ApiResponse"/>
+
+
+    <xs:complexType name="SubscriberData">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="phoneNumber" type="xs:string"/>
+            <xs:element name="imsi" type="xs:string"/>
+            <xs:element name="subscriberType" type="xs:string"/>
+            <xs:element name="services" type="tns:Services" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Services">
+        <xs:sequence>
+            <xs:element name="service" type="tns:Service"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Service">
+        <xs:sequence>
+            <xs:element name="serviceType" type="tns:ServiceType"/>
+            <xs:element name="targetNumber" type="xs:string"/>
+            <xs:element name="active" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ApiResponse">
+        <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            <xs:element name="message" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="SubscriberType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PRE_PAID"/>
+            <xs:enumeration value="POST_PAID"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ServiceType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SERV_VOLTE"/>
+            <xs:enumeration value="SERV_ROAMING"/>
+            <xs:enumeration value="SERV_5G"/>
+            <xs:enumeration value="SERV_LTE"/>
+            <xs:enumeration value="SERV_VOICE"/>
+            <xs:enumeration value="SERV_SMS"/>
+            <xs:enumeration value="SERV_CFWNOREPLY"/>
+            <xs:enumeration value="SERV_CFWNOREACH"/>
+            <xs:enumeration value="SERV_CRBT"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
