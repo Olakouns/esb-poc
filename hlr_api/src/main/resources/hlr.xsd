@@ -28,7 +28,8 @@
             <xs:sequence>
                 <xs:element name="service" type="tns:Service"/>
             </xs:sequence>
-            <xs:attribute name="phoneNumber" use="required"/>
+            <xs:attribute name="phoneNumber" type="xs:string" use="required"/>
+            <xs:attribute name="verb" type="tns:VerbType" use="required"/>
         </xs:complexType>
     </xs:element>
 
@@ -47,7 +48,7 @@
 
     <xs:complexType name="Services">
         <xs:sequence>
-            <xs:element name="service" type="tns:Service"/>
+            <xs:element name="service" type="tns:Service" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -84,6 +85,14 @@
             <xs:enumeration value="SERV_CFWNOREPLY"/>
             <xs:enumeration value="SERV_CFWNOREACH"/>
             <xs:enumeration value="SERV_CRBT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="VerbType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ADD"/>
+            <xs:enumeration value="UPDATE"/>
+            <xs:enumeration value="DELETE"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

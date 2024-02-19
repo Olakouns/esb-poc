@@ -9,6 +9,13 @@
                 <esbParameter name="phoneNumber" newValue="+221785900131" oldValue = "" />
                 <esbParameter name="subscriberType" newValue="PRE_PAID" oldValue = "" />
                 <esbParameter name="imsi" newValue="10547544" oldValue = "" />
+                <esbServices>
+                    <esbService verb="ADD">
+                        <esbParameter name="serviceType" newValue="SERV_LTE" oldValue="" />
+                        <esbParameter name="targetNumber" newValue="785900131" oldValue="" />
+                        <esbParameter name="active" newValue="true" oldValue="" />
+                    </esbService>
+                </esbServices>
             </esbContent>
         </esbRootActionRequest>
     </Body>

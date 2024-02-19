@@ -11,6 +11,7 @@ import sn.esmt.gesb.dto.Workflow;
 import sn.esmt.gesb.dto.WorkflowStep;
 import sn.esmt.gesb.soam.EsbParameter;
 import sn.esmt.gesb.soam.EsbRootActionRequest;
+import sn.esmt.gesb.soam.EsbService;
 import sn.esmt.gesb.soam.VerbType;
 import sn.esmt.gesb.tpo_manager.builder.MappingBuilder;
 import sn.esmt.gesb.tpo_manager.exceptions.BadRequestException;
@@ -22,6 +23,7 @@ import sn.esmt.gesb.tpo_manager.repositories.ConstantConfigRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,14 +60,19 @@ public class TPOServiceImpl implements TPOService {
         Workflow workflow = new Workflow();
         try {
             for (TPOWorkOrder pattern : tpoData.getPatterns()) {
-                WorkflowStep workflowStep = buildWorkflowStep(pattern, esbRootActionRequest);
-                if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
-                    for (TPOWorkOrder tpoWorkOrderFailure : pattern.getTpoWorkOrderFailure()) {
-                        WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbRootActionRequest);
-                        workflowStep.getFailureSteps().add(workflowStepFailure);
+                if(pattern.isServiceTemplate()){
+                    if (esbRootActionRequest.getEsbContent().getEsbServices() == null || esbRootActionRequest.getEsbContent().getEsbServices().getEsbService().isEmpty()) {
+//                        todo : throw exception here
                     }
+                    for (EsbService esbService : esbRootActionRequest.getEsbContent().getEsbServices().getEsbService()) {
+                        // todo : check here otherwise clone object
+                        List<EsbParameter> esbParameters =  esbRootActionRequest.getEsbContent().getEsbParameter();
+                        esbParameters.addAll(esbService.getEsbParameter());
+                        workflow.getWorkflowSteps().add(builderStep(pattern, esbParameters));
+                    }
+                } else {
+                    workflow.getWorkflowSteps().add(builderStep(pattern,  esbRootActionRequest.getEsbContent().getEsbParameter()));
                 }
-                workflow.getWorkflowSteps().add(workflowStep);
             }
         } catch (IOException | JDOMException e) {
             // TODO: 2/16/2024 Manage exception correctly
@@ -74,9 +81,20 @@ public class TPOServiceImpl implements TPOService {
         return workflow;
     }
 
-    private WorkflowStep buildWorkflowStep(TPOWorkOrder pattern, EsbRootActionRequest esbRootActionRequest) throws IOException, JDOMException {
+    private WorkflowStep builderStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
+        WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters);
+        if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
+            for (TPOWorkOrder tpoWorkOrderFailure : pattern.getTpoWorkOrderFailure()) {
+                WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbParameters);
+                workflowStep.getFailureSteps().add(workflowStepFailure);
+            }
+        }
+        return workflowStep;
+    }
+
+    private WorkflowStep buildWorkflowStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
         WorkflowStep workflowStep = new WorkflowStep();
-        String template = mappingBuilder.buildSOAPTemplate(pattern.getTemplate(), esbRootActionRequest);
+        String template = mappingBuilder.buildSOAPTemplate(pattern.getTemplate(), esbParameters);
         workflowStep.setBodyContent(template);
         if (configurationRepository.findByKeyName(pattern.getEquipment().toUpperCase()).isPresent()) {
             workflowStep.setUrl(configurationRepository.findByKeyName(pattern.getEquipment().toUpperCase()).get().getValueContent());
