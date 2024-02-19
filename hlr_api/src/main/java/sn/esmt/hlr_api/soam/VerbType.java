@@ -13,31 +13,33 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for SubscriberType.
+ * <p>Java class for VerbType.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <pre>
- * &lt;simpleType name="SubscriberType"&gt;
+ * &lt;simpleType name="VerbType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="PRE_PAID"/&gt;
- *     &lt;enumeration value="POST_PAID"/&gt;
+ *     &lt;enumeration value="ADD"/&gt;
+ *     &lt;enumeration value="UPDATE"/&gt;
+ *     &lt;enumeration value="DELETE"/&gt;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
  * 
  */
-@XmlType(name = "SubscriberType")
+@XmlType(name = "VerbType")
 @XmlEnum
-public enum SubscriberType {
+public enum VerbType {
 
-    PRE_PAID,
-    POST_PAID;
+    ADD,
+    UPDATE,
+    DELETE;
 
     public String value() {
         return name();
     }
 
-    public static SubscriberType fromValue(String v) {
+    public static VerbType fromValue(String v) {
         return valueOf(v);
     }
 

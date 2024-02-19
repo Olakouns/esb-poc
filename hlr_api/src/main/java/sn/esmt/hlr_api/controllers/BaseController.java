@@ -23,14 +23,14 @@ public class BaseController {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "activateSubscriberRequest")
     @ResponsePayload
     public JAXBElement<ApiResponse> activateSubscriber(@RequestPayload SubscriberData subscriberData) {
-        log.info("Get request from client: {}", subscriberData.getImsi());
+        log.info("ActivateSubscriber Get request from client: {}", subscriberData.getImsi());
         return objectFactory.createActivateSubscriberResponse(subscriberUserService.activateSubscriber(subscriberData));
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deactivateSubscriberRequest")
     @ResponsePayload
     public JAXBElement<ApiResponse> deactivateSubscriber(@RequestPayload DeactivateSubscriberRequest deactivateSubscriberRequest) {
-        log.info("Get request from client: {}", deactivateSubscriberRequest.getPhoneNumber());
+        log.info("DeactivateSubscriber - Get request from client: {}", deactivateSubscriberRequest.getPhoneNumber());
         return objectFactory.createDeactivateSubscriberResponse(subscriberUserService.deactivateSubscriber(deactivateSubscriberRequest));
     }
 
@@ -44,7 +44,7 @@ public class BaseController {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "modifyServiceSubscriberRequest")
     @ResponsePayload
     public JAXBElement<ApiResponse> modifyServiceSubscriber(@RequestPayload ModifyServiceSubscriberRequest modifyServiceSubscriberRequest) {
-        log.info("Get request from client: {}", modifyServiceSubscriberRequest.getPhoneNumber());
+        log.info("ModifyServiceSubscriber - Get request from client: {}", modifyServiceSubscriberRequest.getPhoneNumber());
         return objectFactory.createModifyServiceSubscriberResponse(subscriberUserService.modifyServiceSubscriber(modifyServiceSubscriberRequest));
     }
 }

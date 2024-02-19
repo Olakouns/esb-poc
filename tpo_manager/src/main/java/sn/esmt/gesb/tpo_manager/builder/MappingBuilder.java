@@ -16,14 +16,14 @@ import java.util.regex.Pattern;
 
 @Component
 public class MappingBuilder {
-    public String buildSOAPTemplate(String template, EsbRootActionRequest esbRootActionRequest) throws JDOMException, IOException {
-        Document document = new SAXBuilder().build(new StringReader(template));
-        Element rootElement = document.getRootElement();
-
+    public String buildSOAPTemplate(String template, List<EsbParameter> esbParameters) {
         for (String extractVariable : extractVariables(template)) {
-            Optional<EsbParameter> parameter = esbRootActionRequest.getEsbContent().getEsbParameter().stream().filter(esbParameter -> esbParameter.getName().equals(extractVariable)).findFirst();
-            if (parameter.isPresent()){
-                template = template.replace("${" + extractVariable + "}", parameter.get().getNewValue());
+            String variableName = extractVariable.startsWith("!") ? extractVariable.substring(1) : extractVariable;
+            Optional<EsbParameter> parameter = esbParameters.stream().filter(esbParameter -> esbParameter.getName().equals(variableName)).findFirst();
+            if (parameter.isPresent()) {
+                template = template.replace("${" + extractVariable + "}", getBindingData(extractVariable, parameter.get().getNewValue()));
+            } else {
+                // todo: throw exception here
             }
         }
         return template;
@@ -39,7 +39,14 @@ public class MappingBuilder {
         return variables;
     }
 
-    private String getValueFromRequest(){
-        return "";
+    private String getBindingData(String variableName, String value) {
+        boolean isNegation = variableName.startsWith("!");
+        String result = value;
+        if (isNegation) {
+            value = value.toLowerCase();
+            boolean actualResult = !Boolean.parseBoolean(value);
+            result = Boolean.toString(actualResult);
+        }
+        return result;
     }
 }

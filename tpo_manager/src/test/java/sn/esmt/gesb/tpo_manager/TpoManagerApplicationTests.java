@@ -6,6 +6,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import sn.esmt.gesb.tpo_manager.builder.SoapRequestBuilder;
@@ -16,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class TpoManagerApplicationTests {
@@ -58,21 +61,30 @@ class TpoManagerApplicationTests {
     }
 
     private static Map<String, String> extractVariables(String xmlString) {
-        // Expression régulière pour identifier les occurrences de ${...}
         Map<String, String> variables = new HashMap<>();
         Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
         Matcher matcher = pattern.matcher(xmlString);
 
-        // Récupération des variables
         while (matcher.find()) {
             String variable = matcher.group(1);
-            System.out.println("Variable trouvée : " + variable);
-            // Vous pouvez stocker ces variables dans une Map si nécessaire
             variables.put(variable, "12");
         }
-
         // Pour l'instant, je retourne une Map vide, vous pouvez ajuster selon vos besoins
         return variables;
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "True, !active, false",
+            "False, !active, true",
+            "True, active, true",
+            "False, active, false"
+    })
+    public void shouldTestBinding(String originalValue, String variableName, String expectedValue){
+        originalValue = originalValue.toLowerCase();
+        boolean isNegation = variableName.startsWith("!");
+        boolean actualResult = Boolean.parseBoolean(originalValue) != isNegation;
+        assertEquals(Boolean.parseBoolean(expectedValue), actualResult);
     }
 
 }
