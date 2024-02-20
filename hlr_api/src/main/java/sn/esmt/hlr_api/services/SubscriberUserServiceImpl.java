@@ -87,6 +87,7 @@ public class SubscriberUserServiceImpl implements SubscriberUserService {
         SubscriberUser user = optionalSubscriberUser.get();
 
         sn.esmt.hlr_api.soam.Service service = modifyServiceSubscriberRequest.getService();
+
         switch (modifyServiceSubscriberRequest.getVerb()) {
             case ADD:
                 user.getTlServices().add(TLService.builder()
@@ -94,13 +95,29 @@ public class SubscriberUserServiceImpl implements SubscriberUserService {
                         .serviceType(sn.esmt.hlr_api.models.ServiceType.valueOf(service.getServiceType().name()))
                         .targetNumber(service.getTargetNumber())
                         .build());
+                subscriberUserRepository.save(user);
                 break;
             case UPDATE:
+                TLService tlService = findTLServiceByType(user, service);
+                user.getTlServices().remove(tlService);
+                subscriberUserRepository.save(user);
                 break;
             case DELETE:
+                TLService tlServiceSave = findTLServiceByType(user, service);
+                tlServiceSave.setActivated(service.isActive());
+                tlServiceRepository.save(tlServiceSave);
                 break;
+            default:
+                throw new RequestNotAcceptableException("Invalid verb: " + modifyServiceSubscriberRequest.getVerb());
         }
-        return null;
+        return new ApiResponse(true, "Operation Done");
+    }
+
+    private TLService findTLServiceByType(SubscriberUser user, sn.esmt.hlr_api.soam.Service service) {
+        return user.getTlServices().stream()
+                .filter(tls -> tls.getServiceType() == sn.esmt.hlr_api.models.ServiceType.valueOf(service.getServiceType().name()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("ModifyServiceSubscriber: " + service.getServiceType().name(), "PhoneNumber", user.getPhoneNumber()));
     }
 
     private SubscriberData subscriberDataMapper(SubscriberUser user, List<TLService> tlServiceList) {

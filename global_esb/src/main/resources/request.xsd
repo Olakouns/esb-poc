@@ -12,7 +12,12 @@
                 <esbServices>
                     <esbService verb="ADD">
                         <esbParameter name="serviceType" newValue="SERV_LTE" oldValue="" />
-                        <esbParameter name="targetNumber" newValue="785900131" oldValue="" />
+                        <esbParameter name="targetNumber" newValue="" oldValue="" />
+                        <esbParameter name="active" newValue="true" oldValue="" />
+                    </esbService>
+                    <esbService verb="ADD">
+                        <esbParameter name="serviceType" newValue="SERV_ROAMING" oldValue="" />
+                        <esbParameter name="targetNumber" newValue="" oldValue="" />
                         <esbParameter name="active" newValue="true" oldValue="" />
                     </esbService>
                 </esbServices>
