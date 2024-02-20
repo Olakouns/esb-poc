@@ -1,9 +1,14 @@
 package sn.esmt.gesb.services.Impl;
 
+import jakarta.xml.soap.Detail;
+import jakarta.xml.soap.SOAPFault;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Service;
+import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 import sn.esmt.gesb.dto.WorkflowStep;
 import sn.esmt.gesb.services.SagaOrchestratorService;
 
@@ -26,6 +31,18 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
                 // todo : send request here
                 soapClientService.sendSoapRequest(workflowStep.getUrl(), workflowStep.getBodyContent());
             } catch (Exception exception) {
+                if (exception instanceof SoapFaultClientException soapFaultException) {
+                    // todo : show message correctly here
+                    SoapFault soapFault = soapFaultException.getSoapFault();
+                    /*
+                    log.error("getFaultCode " + soapFault.getFaultCode());
+                    log.error("getFaultDetail " + soapFault.getFaultDetail());
+                    log.error("getFaultStringOrReason " + soapFault.getFaultStringOrReason());
+                    log.error("getFaultStringOrReason " + soapFaultException);
+                    */
+                } else {
+                    log.error(workflowStep.getUrl() + " " + exception.getMessage());
+                }
                 this.rollback(workflowSteps, workflowSteps.indexOf(workflowStep), callbackURL);
                 break;
             }

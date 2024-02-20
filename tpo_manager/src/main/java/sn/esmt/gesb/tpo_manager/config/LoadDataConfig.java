@@ -68,13 +68,24 @@ public class LoadDataConfig {
                         .equipment("HLR")
                         .webServiceName("ModifyService")
                         .isServiceTemplate(true)
-                        .template("<modifyServiceSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\">\n" +
+                        .template("<modifyServiceSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" verb=\"ADD\">\n" +
                                 "     <service>\n" +
                                 "         <serviceType>${serviceType}</serviceType>\n" +
                                 "         <targetNumber>${targetNumber}</targetNumber>\n" +
                                 "         <active>${active}</active>\n" +
                                 "     </service>\n" +
                                 "</modifyServiceSubscriberRequest>")
+                        .tpoWorkOrderFailure(List.of(TPOWorkOrder.builder()
+                                .equipment("HLR")
+                                .webServiceName("ModifyServiceFailure")
+                                .template("<modifyServiceSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" verb=\"DELETE\">\n" +
+                                        "     <service>\n" +
+                                        "         <serviceType>${serviceType}</serviceType>\n" +
+                                        "         <targetNumber>${targetNumber}</targetNumber>\n" +
+                                        "         <active>${active}</active>\n" +
+                                        "     </service>\n" +
+                                        "</modifyServiceSubscriberRequest>")
+                                .build()))
                         .build(),
                 TPOWorkOrder.builder()
                         .equipment("IN")

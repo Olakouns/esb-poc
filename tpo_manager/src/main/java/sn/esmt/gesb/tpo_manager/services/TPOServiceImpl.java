@@ -62,11 +62,11 @@ public class TPOServiceImpl implements TPOService {
             for (TPOWorkOrder pattern : tpoData.getPatterns()) {
                 if(pattern.isServiceTemplate()){
                     if (esbRootActionRequest.getEsbContent().getEsbServices() == null || esbRootActionRequest.getEsbContent().getEsbServices().getEsbService().isEmpty()) {
-//                        todo : throw exception here
+                        throw new BadRequestException("There are no service nodes or esbservice is null");
                     }
                     for (EsbService esbService : esbRootActionRequest.getEsbContent().getEsbServices().getEsbService()) {
                         // todo : check here otherwise clone object
-                        List<EsbParameter> esbParameters =  esbRootActionRequest.getEsbContent().getEsbParameter();
+                        List<EsbParameter> esbParameters = new java.util.ArrayList<>(List.copyOf(esbRootActionRequest.getEsbContent().getEsbParameter()));
                         esbParameters.addAll(esbService.getEsbParameter());
                         workflow.getWorkflowSteps().add(builderStep(pattern, esbParameters));
                     }
