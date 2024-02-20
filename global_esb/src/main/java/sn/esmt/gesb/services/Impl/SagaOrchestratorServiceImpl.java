@@ -33,8 +33,8 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
             } catch (Exception exception) {
                 if (exception instanceof SoapFaultClientException soapFaultException) {
                     // todo : show message correctly here
-                    SoapFault soapFault = soapFaultException.getSoapFault();
                     /*
+                    SoapFault soapFault = soapFaultException.getSoapFault();
                     log.error("getFaultCode " + soapFault.getFaultCode());
                     log.error("getFaultDetail " + soapFault.getFaultDetail());
                     log.error("getFaultStringOrReason " + soapFault.getFaultStringOrReason());
