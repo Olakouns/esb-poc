@@ -25,6 +25,7 @@ public class TPOData {
     private String tpoCondition;
     @NotBlank(message = "TPO is required")
     private String tpo;
+    private boolean isCritical;
     @Column(columnDefinition = "TEXT")
     private String description;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
