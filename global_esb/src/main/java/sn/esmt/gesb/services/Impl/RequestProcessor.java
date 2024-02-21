@@ -35,16 +35,25 @@ public class RequestProcessor {
             TPODataDto tpoDataDto = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager", esbRootActionRequest, TPODataDto.class);
             assert tpoDataDto != null;
             log.info("TPODataDto: {}", tpoDataDto.getTpo());
+
             Workflow workflow = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager/" + tpoDataDto.getId() + "/mapping", esbRootActionRequest, Workflow.class);
 
             if (workflow == null || workflow.getWorkflowSteps().isEmpty()) {
                 log.error("No steps found for TPOData: {}", tpoDataDto.getTpo());
                 return;
             }
+
+            if (tpoDataDto.isCritical()) {
+                // todo : Launch request to get previous state and merge with esbRootActionRequest
+            }
+
             sagaOrchestratorService.executeSaga(workflow.getWorkflowSteps(), "CALL_BACK_URL");
         } catch (Exception e) {
             log.error("Error processing request: {}", e.getMessage());
         }
+    }
 
+    public EsbRootActionRequest getCurrentState(TPOWorkOrderDto tpoWorkOrderDto) {
+        return null;
     }
 }

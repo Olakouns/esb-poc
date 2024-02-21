@@ -6,7 +6,7 @@
 //
 
 
-package sn.esmt.gesb.modtest;
+package sn.esmt.gesb.critical;
 
 import jakarta.xml.bind.annotation.*;
 

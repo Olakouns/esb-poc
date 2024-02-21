@@ -25,10 +25,12 @@ public class TPOData {
     private String tpoCondition;
     @NotBlank(message = "TPO is required")
     private String tpo;
-    private boolean isCritical;
     @Column(columnDefinition = "TEXT")
     private String description;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     private List<TPOWorkOrder> patterns = new LinkedList<>();
+    private boolean isCritical;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private TPOWorkOrder previousStateData;
 }

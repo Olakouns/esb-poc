@@ -15,5 +15,7 @@ public class TPODataDto {
     private int id;
     private String tpo;
     private String description;
+    private boolean isCritical;
+    private TPOWorkOrderDto previousStateData;
     private List<TPOWorkOrderDto> patterns;
 }

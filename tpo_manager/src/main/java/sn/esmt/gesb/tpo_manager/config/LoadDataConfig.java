@@ -41,6 +41,7 @@ public class LoadDataConfig {
     private void createTPOData() {
         log.info("Creating TPOData...");
 
+        // TPO_CREATE_SUBSCRIBER_PRE_PAID
         TPOData tpoData = new TPOData();
         tpoData.setTpo("TPO_CREATE_SUBSCRIBER_PRE_PAID");
         tpoData.setDescription("Create a pre paid subscriber");
@@ -113,6 +114,55 @@ public class LoadDataConfig {
                         .build()
         ));
         tpoDataRepository.save(tpoData);
+
+        // TPO_DELETE_SUBSCRIBER_PRE_PAID
+        TPOData tpoDataDelete = new TPOData();
+        tpoDataDelete.setTpo("TPO_DELETE_SUBSCRIBER_PRE_PAID");
+        tpoDataDelete.setDescription("Delete a pre paid subscriber");
+        tpoDataDelete.setVerb("DELETE");
+        tpoDataDelete.setCritical(true);
+        tpoDataDelete.setTpoCondition("PRE_PAID");
+
+        tpoDataDelete.setPreviousStateData(TPOWorkOrder.builder()
+                .equipment("HLR")
+                .webServiceName("displaySubscriber")
+                .template("<displaySubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" />")
+                .build());
+
+        tpoDataDelete.setPatterns(List.of(
+                TPOWorkOrder.builder()
+                        .equipment("IN")
+                        .template("<terminationRequest phoneNumber=\"${phoneNumber}\" xmlns=\"http://esmt.sn/in_api/soam\"/>")
+                        .webServiceName("termination")
+                        .tpoWorkOrderFailure(List.of(
+                                TPOWorkOrder.builder()
+                                        .equipment("IN")
+                                        .template("<newConnectionRequest xmlns=\"http://esmt.sn/in_api/soam\">\n" +
+                                                "\t<name>${subscriberName}</name>\n" +
+                                                "        <phoneNumber>${phoneNumber}</phoneNumber>\n" +
+                                                "        <imsi>${imsi}</imsi>\n" +
+                                                "</newConnectionRequest>")
+                                        .webServiceName("newConnectionRequest")
+                                        .build(),
+                                TPOWorkOrder.builder()
+                                        .equipment("IN")
+                                        .webServiceName("recharging")
+                                        .template("<rechargingRequest xmlns=\"http://esmt.sn/in_api/soam\" phoneNumber=\"${phoneNumber}\">\n" +
+                                                "     <dataBalance>${dataBalance}</dataBalance>\n" +
+                                                "     <callBalance>${callBalance}</callBalance>\n" +
+                                                "     <smsBalance>${smsBalance}</smsBalance>\n" +
+                                                "</rechargingRequest>")
+                                        .build()
+                        ))
+                        .build(),
+                TPOWorkOrder.builder()
+                        .equipment("HLR")
+                        .webServiceName("deactivateSubscriber")
+                        .template("<deactivateSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" />")
+                        .build()
+        ));
+
+        tpoDataRepository.save(tpoDataDelete);
     }
 
     private void createConstantConfig() {
