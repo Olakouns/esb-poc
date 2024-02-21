@@ -74,6 +74,10 @@ public class TPOServiceImpl implements TPOService {
                     workflow.getWorkflowSteps().add(builderStep(pattern,  esbRootActionRequest.getEsbContent().getEsbParameter()));
                 }
             }
+
+            if (tpoData.isCritical()){
+                workflow.setWorkflowStepForCriticalOperation(builderStep(tpoData.getPreviousStateData(), esbRootActionRequest.getEsbContent().getEsbParameter()));
+            }
         } catch (IOException | JDOMException e) {
             // TODO: 2/16/2024 Manage exception correctly
             throw new BadRequestException("TPOData id : " + tpoId);

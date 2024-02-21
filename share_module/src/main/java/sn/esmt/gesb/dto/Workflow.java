@@ -15,4 +15,5 @@ import java.util.List;
 @Builder
 public class Workflow {
     private LinkedList<WorkflowStep> workflowSteps = new LinkedList<>();
+    private WorkflowStep workflowStepForCriticalOperation;
 }

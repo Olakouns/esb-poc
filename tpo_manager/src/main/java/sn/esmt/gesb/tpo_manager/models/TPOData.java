@@ -30,4 +30,7 @@ public class TPOData {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     private List<TPOWorkOrder> patterns = new LinkedList<>();
+    private boolean isCritical;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private TPOWorkOrder previousStateData;
 }
