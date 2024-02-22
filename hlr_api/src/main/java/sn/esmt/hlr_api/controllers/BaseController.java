@@ -23,7 +23,7 @@ public class BaseController {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "activateSubscriberRequest")
     @ResponsePayload
     public JAXBElement<ApiResponse> activateSubscriber(@RequestPayload SubscriberData subscriberData) {
-        log.info("ActivateSubscriber Get request from client: {}", subscriberData.getImsi());
+        log.info("ActivateSubscriber - Get request from client: {}", subscriberData.getImsi());
         return objectFactory.createActivateSubscriberResponse(subscriberUserService.activateSubscriber(subscriberData));
     }
 
@@ -37,7 +37,7 @@ public class BaseController {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "displaySubscriberRequest")
     @ResponsePayload
     public JAXBElement<SubscriberData> displaySubscriber(@RequestPayload DisplaySubscriberRequest displaySubscriberRequest) {
-        log.info("Get request from client: {}", displaySubscriberRequest.getPhoneNumber());
+        log.info("DisplaySubscriberRequest - Get request from client: {}", displaySubscriberRequest.getPhoneNumber());
         return objectFactory.createDisplaySubscriberResponse(subscriberUserService.displaySubscriber(displaySubscriberRequest));
     }
 

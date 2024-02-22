@@ -8,10 +8,7 @@
 
 package sn.esmt.gesb.critical;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.*;
 
 
 /**
@@ -44,7 +41,7 @@ import jakarta.xml.bind.annotation.XmlType;
     "imsi",
     "subscriberType",
     "services"
-})
+}, namespace = "http://esmt.sn/hlr_api/soam")
 public class SubscriberData {
 
     @XmlElement(required = true)

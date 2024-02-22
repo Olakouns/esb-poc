@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import sn.esmt.in_api.exceptions.CustomSoapException;
 import sn.esmt.in_api.models.SubscriberUser;
 import sn.esmt.in_api.repositories.SubscriberUserRepository;
-import sn.esmt.in_api.soam.ApiResponse;
-import sn.esmt.in_api.soam.NewConnectionRequest;
-import sn.esmt.in_api.soam.RechargingRequest;
-import sn.esmt.in_api.soam.TerminationRequest;
+import sn.esmt.in_api.soam.*;
 
 import java.util.Date;
 import java.util.Optional;
@@ -41,7 +38,7 @@ public class BaseServiceImpl implements BaseService {
     public ApiResponse termination(TerminationRequest terminationRequest) {
         Optional<SubscriberUser> userOptional = subscriberUserRepository.findByPhoneNumber(terminationRequest.getPhoneNumber());
         if (userOptional.isEmpty()) {
-            throw new CustomSoapException("SubscriberUser" , "PhoneNumber", terminationRequest.getPhoneNumber());
+            throw new CustomSoapException("SubscriberUser", "PhoneNumber", terminationRequest.getPhoneNumber());
         }
         subscriberUserRepository.delete(userOptional.get());
         return new ApiResponse(true, "Termination done");
@@ -56,7 +53,7 @@ public class BaseServiceImpl implements BaseService {
     public ApiResponse recharging(RechargingRequest rechargingRequest) {
         Optional<SubscriberUser> userOptional = subscriberUserRepository.findByPhoneNumber(rechargingRequest.getPhoneNumber());
         if (userOptional.isEmpty()) {
-            throw new CustomSoapException("SubscriberUser" , "PhoneNumber", rechargingRequest.getPhoneNumber());
+            throw new CustomSoapException("SubscriberUser", "PhoneNumber", rechargingRequest.getPhoneNumber());
         }
 
         SubscriberUser subscriberUser = userOptional.get();
@@ -65,6 +62,23 @@ public class BaseServiceImpl implements BaseService {
         subscriberUser.setDataBalance(rechargingRequest.getDataBalance());
         subscriberUserRepository.save(subscriberUser);
         return new ApiResponse(true, "User with phone " + rechargingRequest.getPhoneNumber() + "recharged");
+    }
+
+    @Override
+    public DisplaySubscriberResponse displaySubscriber(DisplaySubscriberRequest displaySubscriberRequest) {
+        Optional<SubscriberUser> userOptional = subscriberUserRepository.findByPhoneNumber(displaySubscriberRequest.getPhoneNumber());
+        if (userOptional.isEmpty()) {
+            throw new CustomSoapException("SubscriberUser", "PhoneNumber", displaySubscriberRequest.getPhoneNumber());
+        }
+
+        DisplaySubscriberResponse displaySubscriberResponse = new DisplaySubscriberResponse();
+        displaySubscriberResponse.setImsi(userOptional.get().getImsi());
+        displaySubscriberResponse.setSubscriberName(userOptional.get().getName());
+        displaySubscriberResponse.setSmsBalance(userOptional.get().getSmsBalance());
+        displaySubscriberResponse.setDataBalance(userOptional.get().getDataBalance());
+        displaySubscriberResponse.setCallBalance(userOptional.get().getCallBalance());
+        displaySubscriberResponse.setPhoneNumber(userOptional.get().getPhoneNumber());
+        return displaySubscriberResponse;
     }
 
 

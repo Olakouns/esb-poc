@@ -25,13 +25,18 @@ public class TPOController {
 
     @PostMapping
     public TPODataDto getTpoData(@RequestBody EsbRootActionRequest esbRootActionRequest) {
-        log.info("Start searching TPO" + esbRootActionRequest.getRequestId());
+        log.info("GetTpoData - Start searching TPO" + esbRootActionRequest.getRequestId());
         return tpoService.getTPODataOfRequest(esbRootActionRequest);
     }
 
     @PostMapping("{tpoId}/mapping")
     public Workflow getMappingData(@PathVariable int tpoId, @RequestBody EsbRootActionRequest esbRootActionRequest) {
-        log.info("Start tpo template mapping " + esbRootActionRequest.getRequestId());
+        log.info("GetMappingData - Start tpo template mapping " + esbRootActionRequest.getRequestId());
         return tpoService.getMappingData(tpoId, esbRootActionRequest);
+    }
+    @PostMapping("{tpoId}/mapping/critical")
+    public WorkflowStep getMappingDataCritical(@PathVariable int tpoId, @RequestBody EsbRootActionRequest esbRootActionRequest) {
+        log.info("GetMappingDataCritical - Start tpo template mapping " + esbRootActionRequest.getRequestId());
+        return tpoService.getMappingDataCritical(tpoId, esbRootActionRequest);
     }
 }

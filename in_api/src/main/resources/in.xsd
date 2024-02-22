@@ -35,6 +35,25 @@
 
     <xs:element name="terminationResponse" type="tns:ApiResponse"/>
 
+    <xs:element name="displaySubscriberRequest">
+        <xs:complexType>
+            <xs:attribute name="phoneNumber" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="displaySubscriberResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="subscriberName" type="xs:string"/>
+                <xs:element name="phoneNumber" type="xs:string"/>
+                <xs:element name="imsi" type="xs:string"/>
+                <xs:element name="dataBalance" type="xs:double"/>
+                <xs:element name="callBalance" type="xs:double"/>
+                <xs:element name="smsBalance" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:complexType name="ApiResponse">
         <xs:sequence>
             <xs:element name="success" type="xs:boolean"/>

@@ -8,9 +8,7 @@
 
 package sn.esmt.gesb.critical;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +37,10 @@ import java.util.List;
 @XmlType(name = "Services", propOrder = {
     "service"
 })
+@XmlRootElement(name = "services", namespace = "http://esmt.sn/hlr_api/soam")
 public class Services {
 
+    @XmlElement(namespace = "http://esmt.sn/hlr_api/soam")
     public List<Service> service;
     public List<Service> getService() {
         if (service == null) {

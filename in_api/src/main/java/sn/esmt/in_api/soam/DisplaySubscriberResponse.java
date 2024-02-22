@@ -10,9 +10,8 @@ package sn.esmt.in_api.soam;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlSchemaType;
 import jakarta.xml.bind.annotation.XmlType;
 
 
@@ -26,11 +25,13 @@ import jakarta.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
+ *         &lt;element name="subscriberName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="phoneNumber" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="imsi" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="dataBalance" type="{http://www.w3.org/2001/XMLSchema}double"/&gt;
  *         &lt;element name="callBalance" type="{http://www.w3.org/2001/XMLSchema}double"/&gt;
  *         &lt;element name="smsBalance" type="{http://www.w3.org/2001/XMLSchema}double"/&gt;
  *       &lt;/sequence&gt;
- *       &lt;attribute name="phoneNumber" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -40,19 +41,97 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+    "subscriberName",
+    "phoneNumber",
+    "imsi",
     "dataBalance",
     "callBalance",
     "smsBalance"
 })
-@XmlRootElement(name = "rechargingRequest")
-public class RechargingRequest {
+@XmlRootElement(name = "displaySubscriberResponse")
+public class DisplaySubscriberResponse {
 
+    @XmlElement(required = true)
+    protected String subscriberName;
+    @XmlElement(required = true)
+    protected String phoneNumber;
+    @XmlElement(required = true)
+    protected String imsi;
     protected double dataBalance;
     protected double callBalance;
     protected double smsBalance;
-    @XmlAttribute(name = "phoneNumber", required = true)
-    @XmlSchemaType(name = "anySimpleType")
-    protected String phoneNumber;
+
+    /**
+     * Gets the value of the subscriberName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSubscriberName() {
+        return subscriberName;
+    }
+
+    /**
+     * Sets the value of the subscriberName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSubscriberName(String value) {
+        this.subscriberName = value;
+    }
+
+    /**
+     * Gets the value of the phoneNumber property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Sets the value of the phoneNumber property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPhoneNumber(String value) {
+        this.phoneNumber = value;
+    }
+
+    /**
+     * Gets the value of the imsi property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getImsi() {
+        return imsi;
+    }
+
+    /**
+     * Sets the value of the imsi property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setImsi(String value) {
+        this.imsi = value;
+    }
 
     /**
      * Gets the value of the dataBalance property.
@@ -100,30 +179,6 @@ public class RechargingRequest {
      */
     public void setSmsBalance(double value) {
         this.smsBalance = value;
-    }
-
-    /**
-     * Gets the value of the phoneNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    /**
-     * Sets the value of the phoneNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPhoneNumber(String value) {
-        this.phoneNumber = value;
     }
 
 }
