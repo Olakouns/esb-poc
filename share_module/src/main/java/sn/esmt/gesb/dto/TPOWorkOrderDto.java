@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class TPOWorkOrderDto {
     private String webServiceName;
+    private String webServiceClassName;
     private String template;
     private String equipment;
     private List<TPOWorkOrderDto> tpoWorkOrderFailure;

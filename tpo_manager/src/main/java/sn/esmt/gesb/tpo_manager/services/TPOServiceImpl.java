@@ -74,10 +74,6 @@ public class TPOServiceImpl implements TPOService {
                     workflow.getWorkflowSteps().add(builderStep(pattern,  esbRootActionRequest.getEsbContent().getEsbParameter()));
                 }
             }
-
-            if (tpoData.isCritical()){
-                workflow.setWorkflowStepForCriticalOperation(builderStep(tpoData.getPreviousStateData(), esbRootActionRequest.getEsbContent().getEsbParameter()));
-            }
         } catch (IOException | JDOMException e) {
             // TODO: 2/16/2024 Manage exception correctly
             throw new BadRequestException("TPOData id : " + tpoId);
@@ -85,8 +81,26 @@ public class TPOServiceImpl implements TPOService {
         return workflow;
     }
 
+    @Override
+    public Workflow getMappingDataCritical(int tpoId, EsbRootActionRequest esbRootActionRequest) {
+        TPOData tpoData = tpoDataRepository.findById(tpoId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoId));
+        if (!tpoData.isCritical()){
+            throw new BadRequestException("GetMappingDataCritical - TPOData id : " + tpoId);
+        }
+        try {
+            Workflow workflow = new Workflow();
+            for (TPOWorkOrder previousStatesDatum : tpoData.getPreviousStatesData()) {
+                workflow.getWorkflowSteps().add(builderStep(previousStatesDatum, esbRootActionRequest.getEsbContent().getEsbParameter()));
+            }
+            return workflow;
+        } catch (IOException | JDOMException e) {
+            throw new BadRequestException("GetMappingDataCritical - TPOData id : " + tpoId);
+        }
+    }
+
     private WorkflowStep builderStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
         WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters);
+        workflowStep.setWebServiceClassName(pattern.getWebServiceClassName());
         if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
             for (TPOWorkOrder tpoWorkOrderFailure : pattern.getTpoWorkOrderFailure()) {
                 WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbParameters);

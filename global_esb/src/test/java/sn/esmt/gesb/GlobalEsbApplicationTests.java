@@ -2,6 +2,8 @@ package sn.esmt.gesb;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.retry.annotation.EnableRetry;
@@ -11,13 +13,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import sn.esmt.gesb.critical.Service;
-import sn.esmt.gesb.critical.ServiceType;
-import sn.esmt.gesb.critical.Services;
-import sn.esmt.gesb.critical.SubscriberData;
+import sn.esmt.gesb.critical.*;
 import sn.esmt.gesb.services.Impl.SoapClientService;
 import sn.esmt.gesb.services.Impl.YourClassWithRetryLogic;
 import sn.esmt.gesb.soam.*;
+import sn.esmt.gesb.utils.SoapResponseParser;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -191,7 +191,7 @@ class GlobalEsbApplicationTests {
                     if (value instanceof String || value instanceof Boolean) {
                         EsbParameter esbParameter = buildEsbParameter(name, value.toString(), null);
                         esbParameters.add(esbParameter);
-                    } else if (value instanceof Enum<?> ) {
+                    } else if (value instanceof Enum<?>) {
                         Enum<?> enums = (Enum<?>) value;
                         EsbParameter esbParameter = buildEsbParameter(name, enums.name(), null);
                         esbParameters.add(esbParameter);
@@ -235,4 +235,29 @@ class GlobalEsbApplicationTests {
         return esbService;
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><ns2:displaySubscriberResponse xmlns:ns2=\"http://esmt.sn/hlr_api/soam\"><ns2:name>Razacki</ns2:name><ns2:phoneNumber>+221785900131</ns2:phoneNumber><ns2:imsi>10547544</ns2:imsi><ns2:subscriberType>PRE_PAID</ns2:subscriberType><ns2:services><ns2:service><ns2:serviceType>SERV_LTE</ns2:serviceType><ns2:targetNumber/><ns2:active>true</ns2:active></ns2:service><ns2:service><ns2:serviceType>SERV_ROAMING</ns2:serviceType><ns2:targetNumber/><ns2:active>true</ns2:active></ns2:service></ns2:services></ns2:displaySubscriberResponse>"})
+    public void testParserDataForHLR(String xmlString) {
+        String className = "sn.esmt.gesb.critical.SubscriberData";
+        try {
+            SubscriberData data = (SubscriberData) SoapResponseParser.parse(className, xmlString);
+            System.out.println(data);
+            Assertions.assertEquals(data.getImsi(), "10547544");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><ns2:displaySubscriberResponse xmlns:ns2=\"http://esmt.sn/in_api/soam\"><ns2:subscriberName>Razacki</ns2:subscriberName><ns2:phoneNumber>+221785900131</ns2:phoneNumber><ns2:imsi>10547544</ns2:imsi><ns2:dataBalance>500.0</ns2:dataBalance><ns2:callBalance>500.0</ns2:callBalance><ns2:smsBalance>500.0</ns2:smsBalance></ns2:displaySubscriberResponse>"})
+    public void testParserDataForIN(String xmlString) {
+        String className = "sn.esmt.gesb.critical.DisplaySubscriberResponse";
+        try {
+            DisplaySubscriberResponse data = (DisplaySubscriberResponse) SoapResponseParser.parse(className, xmlString);
+            System.out.println(data);
+            Assertions.assertEquals(data.getImsi(), "10547544");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -13,4 +13,6 @@ public interface TPOService {
     TPODataDto getTPODataOfRequest(EsbRootActionRequest esbRootActionRequest);
 
     Workflow getMappingData(int tpoId, EsbRootActionRequest esbRootActionRequest);
+
+    Workflow getMappingDataCritical(int tpoId, EsbRootActionRequest esbRootActionRequest);
 }

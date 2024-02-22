@@ -124,6 +124,7 @@ public class SubscriberUserServiceImpl implements SubscriberUserService {
         SubscriberData subscriberData = new SubscriberData();
         subscriberData.setName(user.getName());
         subscriberData.setImsi(user.getImsi());
+        subscriberData.setSubscriberType(user.getSubscriberType().name());
         subscriberData.setPhoneNumber(user.getPhoneNumber());
         Services services = new Services();
 

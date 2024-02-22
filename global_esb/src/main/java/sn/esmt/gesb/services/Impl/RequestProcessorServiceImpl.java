@@ -9,10 +9,4 @@ import sn.esmt.gesb.services.RequestProcessorService;
 @Service
 @RequiredArgsConstructor
 public class RequestProcessorServiceImpl implements RequestProcessorService {
-
-//    @Override
-////    public TPOData processRequest(ActionRequest actionRequest) {
-//    public void processRequest(ActionRequest actionRequest) {
-//
-//    }
 }

@@ -8,17 +8,14 @@
 
 package sn.esmt.gesb.critical;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.*;
 
 
 /**
  * <p>Java class for SubscriberData complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="SubscriberData"&gt;
  *   &lt;complexContent&gt;
@@ -34,36 +31,38 @@ import jakarta.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SubscriberData", propOrder = {
-    "name",
-    "phoneNumber",
-    "imsi",
-    "subscriberType",
-    "services"
-})
+@XmlType(name = "", propOrder = {
+        "name",
+        "phoneNumber",
+        "imsi",
+        "subscriberType",
+        "services"
+}, namespace = "http://esmt.sn/hlr_api/soam")
+@XmlRootElement(name = "displaySubscriberResponse", namespace = "http://esmt.sn/hlr_api/soam")
 public class SubscriberData {
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, namespace = "http://esmt.sn/hlr_api/soam")
     public String name;
-    @XmlElement(required = true)
+    @XmlElement(required = true, namespace = "http://esmt.sn/hlr_api/soam")
     protected String phoneNumber;
-    @XmlElement(required = true)
+    @XmlElement(required = true, namespace = "http://esmt.sn/hlr_api/soam")
     public String imsi;
-    @XmlElement(required = true)
+    @XmlElement(required = true, namespace = "http://esmt.sn/hlr_api/soam")
     public String subscriberType;
+    @XmlElement(namespace = "http://esmt.sn/hlr_api/soam")
     public Services services;
 
     /**
      * Gets the value of the name property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getName() {
         return name;
@@ -71,11 +70,11 @@ public class SubscriberData {
 
     /**
      * Sets the value of the name property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setName(String value) {
         this.name = value;
@@ -83,11 +82,11 @@ public class SubscriberData {
 
     /**
      * Gets the value of the phoneNumber property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getPhoneNumber() {
         return phoneNumber;
@@ -95,11 +94,11 @@ public class SubscriberData {
 
     /**
      * Sets the value of the phoneNumber property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setPhoneNumber(String value) {
         this.phoneNumber = value;
@@ -107,11 +106,11 @@ public class SubscriberData {
 
     /**
      * Gets the value of the imsi property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getImsi() {
         return imsi;
@@ -119,11 +118,11 @@ public class SubscriberData {
 
     /**
      * Sets the value of the imsi property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setImsi(String value) {
         this.imsi = value;
@@ -131,11 +130,11 @@ public class SubscriberData {
 
     /**
      * Gets the value of the subscriberType property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getSubscriberType() {
         return subscriberType;
@@ -143,11 +142,11 @@ public class SubscriberData {
 
     /**
      * Sets the value of the subscriberType property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setSubscriberType(String value) {
         this.subscriberType = value;
@@ -155,11 +154,11 @@ public class SubscriberData {
 
     /**
      * Gets the value of the services property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Services }
-     *     
+     *
      */
     public Services getServices() {
         return services;
@@ -167,11 +166,11 @@ public class SubscriberData {
 
     /**
      * Sets the value of the services property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Services }
-     *     
+     *
      */
     public void setServices(Services value) {
         this.services = value;

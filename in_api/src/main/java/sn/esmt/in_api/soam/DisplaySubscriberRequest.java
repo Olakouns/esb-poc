@@ -25,11 +25,6 @@ import jakarta.xml.bind.annotation.XmlType;
  * &lt;complexType&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="dataBalance" type="{http://www.w3.org/2001/XMLSchema}double"/&gt;
- *         &lt;element name="callBalance" type="{http://www.w3.org/2001/XMLSchema}double"/&gt;
- *         &lt;element name="smsBalance" type="{http://www.w3.org/2001/XMLSchema}double"/&gt;
- *       &lt;/sequence&gt;
  *       &lt;attribute name="phoneNumber" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -39,68 +34,13 @@ import jakarta.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "dataBalance",
-    "callBalance",
-    "smsBalance"
-})
-@XmlRootElement(name = "rechargingRequest")
-public class RechargingRequest {
+@XmlType(name = "")
+@XmlRootElement(name = "displaySubscriberRequest")
+public class DisplaySubscriberRequest {
 
-    protected double dataBalance;
-    protected double callBalance;
-    protected double smsBalance;
     @XmlAttribute(name = "phoneNumber", required = true)
     @XmlSchemaType(name = "anySimpleType")
     protected String phoneNumber;
-
-    /**
-     * Gets the value of the dataBalance property.
-     * 
-     */
-    public double getDataBalance() {
-        return dataBalance;
-    }
-
-    /**
-     * Sets the value of the dataBalance property.
-     * 
-     */
-    public void setDataBalance(double value) {
-        this.dataBalance = value;
-    }
-
-    /**
-     * Gets the value of the callBalance property.
-     * 
-     */
-    public double getCallBalance() {
-        return callBalance;
-    }
-
-    /**
-     * Sets the value of the callBalance property.
-     * 
-     */
-    public void setCallBalance(double value) {
-        this.callBalance = value;
-    }
-
-    /**
-     * Gets the value of the smsBalance property.
-     * 
-     */
-    public double getSmsBalance() {
-        return smsBalance;
-    }
-
-    /**
-     * Sets the value of the smsBalance property.
-     * 
-     */
-    public void setSmsBalance(double value) {
-        this.smsBalance = value;
-    }
 
     /**
      * Gets the value of the phoneNumber property.

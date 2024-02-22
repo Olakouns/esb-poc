@@ -123,11 +123,20 @@ public class LoadDataConfig {
         tpoDataDelete.setCritical(true);
         tpoDataDelete.setTpoCondition("PRE_PAID");
 
-        tpoDataDelete.setPreviousStateData(TPOWorkOrder.builder()
-                .equipment("HLR")
-                .webServiceName("displaySubscriber")
-                .template("<displaySubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" />")
-                .build());
+        tpoDataDelete.setPreviousStatesData(List.of(
+                TPOWorkOrder.builder()
+                        .equipment("HLR")
+                        .webServiceName("displaySubscriber")
+                        .webServiceClassName("sn.esmt.gesb.critical.SubscriberData")
+                        .template("<displaySubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" />")
+                        .build(),
+                TPOWorkOrder.builder()
+                        .equipment("IN")
+                        .webServiceName("displaySubscriber")
+                        .webServiceClassName("sn.esmt.gesb.critical.DisplaySubscriberResponse")
+                        .template("<displaySubscriberRequest xmlns=\"http://esmt.sn/in_api/soam\" phoneNumber=\"${phoneNumber}\" />")
+                        .build()
+        ));
 
         tpoDataDelete.setPatterns(List.of(
                 TPOWorkOrder.builder()

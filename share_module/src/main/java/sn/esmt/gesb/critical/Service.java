@@ -38,13 +38,15 @@ import jakarta.xml.bind.annotation.*;
     "targetNumber",
     "active"
 })
+@XmlRootElement(name = "service", namespace = "http://esmt.sn/hlr_api/soam")
 public class Service {
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, namespace = "http://esmt.sn/hlr_api/soam")
     @XmlSchemaType(name = "string")
     public ServiceType serviceType;
-    @XmlElement(required = true)
+    @XmlElement(required = true, namespace = "http://esmt.sn/hlr_api/soam")
     public String targetNumber;
+    @XmlElement(namespace = "http://esmt.sn/hlr_api/soam")
     public boolean active;
 
     /**

@@ -1,0 +1,12 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Header>
+        <callbackURL xmlns="http://esmt.sn/gesb/soam">http://example.com/callback</callbackURL>
+    </Header>
+    <Body>
+        <esbRootActionRequest requestId="12358645" xmlns="http://esmt.sn/gesb/soam">
+            <esbContent verb="DELETE">
+                <esbParameter name="phoneNumber" newValue="+221785900131" oldValue=""/>
+            </esbContent>
+        </esbRootActionRequest>
+    </Body>
+</Envelope>
