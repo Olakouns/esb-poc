@@ -35,7 +35,7 @@ public class TPOController {
         return tpoService.getMappingData(tpoId, esbRootActionRequest);
     }
     @PostMapping("{tpoId}/mapping/critical")
-    public WorkflowStep getMappingDataCritical(@PathVariable int tpoId, @RequestBody EsbRootActionRequest esbRootActionRequest) {
+    public Workflow getMappingDataCritical(@PathVariable int tpoId, @RequestBody EsbRootActionRequest esbRootActionRequest) {
         log.info("GetMappingDataCritical - Start tpo template mapping " + esbRootActionRequest.getRequestId());
         return tpoService.getMappingDataCritical(tpoId, esbRootActionRequest);
     }

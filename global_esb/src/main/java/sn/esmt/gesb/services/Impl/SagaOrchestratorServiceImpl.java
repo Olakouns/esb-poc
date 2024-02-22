@@ -57,7 +57,7 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
         List<WorkflowStep> actions = new LinkedList<>();
         for (int i = index - 1; i >= 0; i--) {
             if (workflowSteps.get(i).getFailureSteps() == null) continue;
-            Collections.reverse(workflowSteps.get(i).getFailureSteps());
+            // Collections.reverse(workflowSteps.get(i).getFailureSteps());
             actions.addAll(workflowSteps.get(i).getFailureSteps());
         }
 

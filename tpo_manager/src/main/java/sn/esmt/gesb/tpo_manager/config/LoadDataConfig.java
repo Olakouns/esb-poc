@@ -127,12 +127,14 @@ public class LoadDataConfig {
                 TPOWorkOrder.builder()
                         .equipment("HLR")
                         .webServiceName("displaySubscriber")
+                        .webServiceClassName("sn.esmt.gesb.critical.SubscriberData")
                         .template("<displaySubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" />")
                         .build(),
                 TPOWorkOrder.builder()
                         .equipment("IN")
                         .webServiceName("displaySubscriber")
-                        .template("<displaySubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" />")
+                        .webServiceClassName("sn.esmt.gesb.critical.DisplaySubscriberResponse")
+                        .template("<displaySubscriberRequest xmlns=\"http://esmt.sn/in_api/soam\" phoneNumber=\"${phoneNumber}\" />")
                         .build()
         ));
 

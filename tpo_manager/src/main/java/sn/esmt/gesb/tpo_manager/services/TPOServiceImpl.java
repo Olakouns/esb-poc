@@ -82,13 +82,17 @@ public class TPOServiceImpl implements TPOService {
     }
 
     @Override
-    public WorkflowStep getMappingDataCritical(int tpoId, EsbRootActionRequest esbRootActionRequest) {
+    public Workflow getMappingDataCritical(int tpoId, EsbRootActionRequest esbRootActionRequest) {
         TPOData tpoData = tpoDataRepository.findById(tpoId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoId));
         if (!tpoData.isCritical()){
             throw new BadRequestException("GetMappingDataCritical - TPOData id : " + tpoId);
         }
         try {
-            return builderStep(tpoData.getPreviousStateData(), esbRootActionRequest.getEsbContent().getEsbParameter());
+            Workflow workflow = new Workflow();
+            for (TPOWorkOrder previousStatesDatum : tpoData.getPreviousStatesData()) {
+                workflow.getWorkflowSteps().add(builderStep(previousStatesDatum, esbRootActionRequest.getEsbContent().getEsbParameter()));
+            }
+            return workflow;
         } catch (IOException | JDOMException e) {
             throw new BadRequestException("GetMappingDataCritical - TPOData id : " + tpoId);
         }
@@ -96,6 +100,7 @@ public class TPOServiceImpl implements TPOService {
 
     private WorkflowStep builderStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
         WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters);
+        workflowStep.setWebServiceClassName(pattern.getWebServiceClassName());
         if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
             for (TPOWorkOrder tpoWorkOrderFailure : pattern.getTpoWorkOrderFailure()) {
                 WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbParameters);

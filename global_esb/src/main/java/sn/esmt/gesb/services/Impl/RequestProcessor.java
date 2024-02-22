@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import sn.esmt.gesb.components.CurrentStateComponent;
+import sn.esmt.gesb.critical.DisplaySubscriberResponse;
 import sn.esmt.gesb.critical.SubscriberData;
 import sn.esmt.gesb.dto.TPODataDto;
 import sn.esmt.gesb.dto.Workflow;
@@ -43,13 +44,16 @@ public class RequestProcessor {
             log.info("TPODataDto: {}", tpoDataDto.getTpo());
 
             if (tpoDataDto.isCritical()) {
-                WorkflowStep critical = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager/" + tpoDataDto.getId() + "/mapping/critical", esbRootActionRequest, WorkflowStep.class);
+                Workflow critical = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager/" + tpoDataDto.getId() + "/mapping/critical", esbRootActionRequest, Workflow.class);
                 assert critical != null;
-                esbRootActionRequest = getCurrentState(critical, esbRootActionRequest);
+                for (WorkflowStep workflowStep : critical.getWorkflowSteps()) {
+                    esbRootActionRequest = getCurrentState(workflowStep, esbRootActionRequest);
+                }
             }
 
             Workflow workflow = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager/" + tpoDataDto.getId() + "/mapping", esbRootActionRequest, Workflow.class);
 
+            System.out.println(workflow);
             if (workflow == null || workflow.getWorkflowSteps().isEmpty()) {
                 log.error("No steps found for TPOData: {}", tpoDataDto.getTpo());
                 return;
@@ -63,11 +67,22 @@ public class RequestProcessor {
 
     public EsbRootActionRequest getCurrentState(WorkflowStep workflowStep, EsbRootActionRequest esbRootActionRequestFromUser) throws Exception {
         String domResult = soapClientService.sendSoapRequestGettingString(workflowStep.getUrl(), workflowStep.getBodyContent());
-        SubscriberData subscriberData = SoapResponseParser.parseResponse(domResult);
+        Object result = SoapResponseParser.parse(workflowStep.getWebServiceClassName(),domResult);
+
+        if (result instanceof SubscriberData){
+            formatUserSate1((SubscriberData) result, esbRootActionRequestFromUser);
+        } else if (result instanceof DisplaySubscriberResponse) {
+            EsbContent esbContent = currentStateComponent.getEsbParameters((DisplaySubscriberResponse) result);
+            formatUserSate2(esbContent, esbRootActionRequestFromUser);
+        } else {
+            // todo : more action here
+        }
+        return esbRootActionRequestFromUser;
+    }
+
+    private void formatUserSate1(SubscriberData subscriberData, EsbRootActionRequest esbRootActionRequestFromUser){
         EsbContent esbContent = currentStateComponent.getEsbParameters(subscriberData);
-
         VerbType verbType = esbRootActionRequestFromUser.getEsbContent().getVerb();
-
         for (EsbParameter esbParameter : esbContent.getEsbParameter()) {
             Optional<EsbParameter> parameter = esbRootActionRequestFromUser
                     .getEsbContent()
@@ -83,7 +98,7 @@ public class RequestProcessor {
         }
 
         if (esbContent.getEsbServices() == null || esbContent.getEsbServices().getEsbService().isEmpty()) {
-            return esbRootActionRequestFromUser;
+            return ;
         }
 
         if (esbRootActionRequestFromUser.getEsbContent().getEsbServices() == null) {
@@ -114,7 +129,21 @@ public class RequestProcessor {
             }
 
         }
+    }
 
-        return esbRootActionRequestFromUser;
+    private void formatUserSate2(EsbContent esbContent, EsbRootActionRequest esbRootActionRequestFromUser){
+        for (EsbParameter esbParameter : esbContent.getEsbParameter()) {
+            Optional<EsbParameter> parameter = esbRootActionRequestFromUser
+                    .getEsbContent()
+                    .getEsbParameter()
+                    .stream()
+                    .filter(esbParameter1 -> esbParameter1.getName().equals(esbParameter.getName()))
+                    .findFirst();
+            if (parameter.isEmpty()) {
+                esbRootActionRequestFromUser.getEsbContent().getEsbParameter().add(esbParameter);
+            } else {
+                parameter.get().setOldValue(esbParameter.getNewValue());
+            }
+        }
     }
 }

@@ -41,10 +41,10 @@ public class CurrentStateComponent {
 
                     if (value == null) continue;
 
-                    if (value instanceof String || value instanceof Boolean) {
+                    if (value instanceof String || value instanceof Boolean || value instanceof Double || value instanceof Integer || value instanceof Long) {
                         EsbParameter esbParameter = buildEsbParameter(name, value.toString(), null);
                         esbParameters.add(esbParameter);
-                    } else if (value instanceof Enum<?> ) {
+                    } else if (value instanceof Enum<?>) {
                         Enum<?> enums = (Enum<?>) value;
                         EsbParameter esbParameter = buildEsbParameter(name, enums.name(), null);
                         esbParameters.add(esbParameter);

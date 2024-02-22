@@ -61,6 +61,7 @@ public class BaseServiceImpl implements BaseService {
         subscriberUser.setSmsBalance(rechargingRequest.getSmsBalance());
         subscriberUser.setDataBalance(rechargingRequest.getDataBalance());
         subscriberUserRepository.save(subscriberUser);
+
         return new ApiResponse(true, "User with phone " + rechargingRequest.getPhoneNumber() + "recharged");
     }
 
