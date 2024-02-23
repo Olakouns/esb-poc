@@ -14,7 +14,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for VerbType.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <pre>
  * &lt;simpleType name="VerbType"&gt;
@@ -25,7 +25,6 @@ import jakarta.xml.bind.annotation.XmlType;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
- * 
  */
 @XmlType(name = "VerbType")
 @XmlEnum
@@ -33,6 +32,9 @@ public enum VerbType {
 
     ADD,
     UPDATE,
+    SUSPENSION,
+    RESET,
+    SUSPEND_OR_RESET,
     DELETE;
 
     public String value() {

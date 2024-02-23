@@ -24,6 +24,7 @@ public class MappingBuilder {
                 template = template.replace("${" + extractVariable + "}", getBindingData(extractVariable, parameter.get().getNewValue()));
             } else {
                 // todo: throw exception here
+                template = template.replace("${" + extractVariable + "}", "");
             }
         }
         return template;
