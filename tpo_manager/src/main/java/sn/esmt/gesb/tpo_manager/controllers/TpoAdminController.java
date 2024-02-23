@@ -19,7 +19,6 @@ import java.util.List;
 public class TpoAdminController {
     private final TpoAdminService tpoAdminService;
 
-
     @GetMapping("/tpo-data")
     public List<TPOData> getAllTpoData(@RequestParam(required = false, defaultValue = "") String search) {
         return this.tpoAdminService.getAllTpoData(search);

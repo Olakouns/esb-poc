@@ -24,7 +24,7 @@
             <xs:element name="esbParameter" type="tns:EsbParameter" maxOccurs="unbounded"/>
             <xs:element name="esbServices" type="tns:EsbServices" minOccurs="0"/>
         </xs:sequence>
-        <xs:attribute name="verb" type="tns:VerbType" use="required"/>
+        <xs:attribute name="verb" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="EsbParameter">
@@ -50,9 +50,6 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="ADD"/>
             <xs:enumeration value="UPDATE"/>
-            <xs:enumeration value="SUSPENSION"/>
-            <xs:enumeration value="RESET"/>
-            <xs:enumeration value="SUSPEND_OR_RESET"/>
             <xs:enumeration value="DELETE"/>
         </xs:restriction>
     </xs:simpleType>
