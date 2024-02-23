@@ -38,7 +38,7 @@ public class TPOServiceImpl implements TPOService {
 
     @Override
     public TPODataDto getTPODataOfRequest(EsbRootActionRequest esbRootActionRequest) {
-        VerbType verb = esbRootActionRequest.getEsbContent().getVerb();
+        String verb = esbRootActionRequest.getEsbContent().getVerb();
         String condition = "";
         Optional<EsbParameter> esbParameterOptional = esbRootActionRequest.getEsbContent().getEsbParameter().stream().filter(esbParameter -> esbParameter.getName().equals("subscriberType")).findFirst();
         if (esbParameterOptional.isPresent()) {
@@ -47,11 +47,11 @@ public class TPOServiceImpl implements TPOService {
             log.error("subscriberType not present");
         }
 
-        Specification<TPOData> specification = (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("verb"), verb.name());
+        Specification<TPOData> specification = (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("verb"), verb);
         if (!condition.isEmpty()) {
             specification.and((root, query, criteriaBuilder) -> criteriaBuilder.isNull(root.get("condition")));
         }
-        return modelMapper.map(tpoDataRepository.findOne(specification).orElseThrow(() -> new ResourceNotFoundException("TPOData", "verb", verb.name())), TPODataDto.class);
+        return modelMapper.map(tpoDataRepository.findOne(specification).orElseThrow(() -> new ResourceNotFoundException("TPOData", "verb", verb)), TPODataDto.class);
     }
 
     @Override

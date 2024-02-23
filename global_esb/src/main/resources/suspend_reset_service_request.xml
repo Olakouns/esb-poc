@@ -1,0 +1,23 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Header>
+        <callbackURL xmlns="http://esmt.sn/gesb/soam">http://example.com/callback</callbackURL>
+    </Header>
+    <Body>
+        <esbRootActionRequest requestId="1235864" xmlns="http://esmt.sn/gesb/soam">
+            <esbContent verb="SUSPEND_OR_RESET">
+                <esbParameter name="phoneNumber" newValue="+221785900131" oldValue=""/>
+                <esbParameter name="subscriberType" newValue="PRE_PAID" oldValue=""/>
+                <esbServices>
+                    <esbService verb="UPDATE">
+                        <esbParameter name="serviceType" newValue="SERV_LTE" oldValue=""/>
+                        <esbParameter name="active" newValue="false" oldValue=""/>
+                    </esbService>
+                    <esbService verb="UPDATE">
+                        <esbParameter name="serviceType" newValue="SERV_ROAMING" oldValue=""/>
+                        <esbParameter name="active" newValue="false" oldValue=""/>
+                    </esbService>
+                </esbServices>
+            </esbContent>
+        </esbRootActionRequest>
+    </Body>
+</Envelope>

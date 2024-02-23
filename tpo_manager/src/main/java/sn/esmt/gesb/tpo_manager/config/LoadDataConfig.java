@@ -172,6 +172,40 @@ public class LoadDataConfig {
         ));
 
         tpoDataRepository.save(tpoDataDelete);
+
+        // TPO_SUSPEND_OR_RESET_SERVICE_PRE_PAID
+        TPOData tpoDataSuspendOrReset = new TPOData();
+        tpoDataSuspendOrReset.setTpo("TPO_SUSPEND_OR_RESET_SERVICE_PRE_PAID");
+        tpoDataSuspendOrReset.setDescription("Suspend or reset subscriber services");
+        tpoDataSuspendOrReset.setVerb("SUSPEND_OR_RESET");
+        tpoDataSuspendOrReset.setTpoCondition("PRE_PAID");
+        tpoDataSuspendOrReset.setPatterns(List.of(
+                TPOWorkOrder.builder()
+                        .equipment("HLR")
+                        .webServiceName("ModifyService")
+                        .isServiceTemplate(true)
+                        .template("<modifyServiceSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" verb=\"UPDATE\">\n" +
+                                "     <service>\n" +
+                                "         <serviceType>${serviceType}</serviceType>\n" +
+                                "         <targetNumber>${targetNumber}</targetNumber>\n" +
+                                "         <active>${active}</active>\n" +
+                                "     </service>\n" +
+                                "</modifyServiceSubscriberRequest>")
+                        .tpoWorkOrderFailure(List.of(TPOWorkOrder.builder()
+                                .equipment("HLR")
+                                .webServiceName("ModifyServiceFailure")
+                                .template("<modifyServiceSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" verb=\"UPDATE\">\n" +
+                                        "     <service>\n" +
+                                        "         <serviceType>${serviceType}</serviceType>\n" +
+                                        "         <targetNumber>${targetNumber}</targetNumber>\n" +
+                                        "         <active>${!active}</active>\n" +
+                                        "     </service>\n" +
+                                        "</modifyServiceSubscriberRequest>")
+                                .build()))
+                        .build()
+        ));
+
+        tpoDataRepository.save(tpoDataSuspendOrReset);
     }
 
     private void createConstantConfig() {

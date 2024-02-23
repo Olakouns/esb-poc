@@ -18,7 +18,6 @@ import sn.esmt.gesb.soam.*;
 import sn.esmt.gesb.utils.SoapResponseParser;
 
 import java.util.Optional;
-import java.util.OptionalLong;
 
 
 @Service
@@ -53,7 +52,7 @@ public class RequestProcessor {
 
             Workflow workflow = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager/" + tpoDataDto.getId() + "/mapping", esbRootActionRequest, Workflow.class);
 
-            System.out.println(workflow);
+//            System.out.println(workflow);
             if (workflow == null || workflow.getWorkflowSteps().isEmpty()) {
                 log.error("No steps found for TPOData: {}", tpoDataDto.getTpo());
                 return;
@@ -82,7 +81,7 @@ public class RequestProcessor {
 
     private void formatUserSate1(SubscriberData subscriberData, EsbRootActionRequest esbRootActionRequestFromUser){
         EsbContent esbContent = currentStateComponent.getEsbParameters(subscriberData);
-        VerbType verbType = esbRootActionRequestFromUser.getEsbContent().getVerb();
+//        VerbType verbType = esbRootActionRequestFromUser.getEsbContent().getVerb();
         for (EsbParameter esbParameter : esbContent.getEsbParameter()) {
             Optional<EsbParameter> parameter = esbRootActionRequestFromUser
                     .getEsbContent()
