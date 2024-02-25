@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,5 +27,5 @@ public class TPOWorkOrder {
     private String equipment;
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tpo_work_failure_id")
-    private List<TPOWorkOrder> tpoWorkOrderFailure;
+    private List<TPOWorkOrder> tpoWorkOrderFailure = new ArrayList<>();
 }

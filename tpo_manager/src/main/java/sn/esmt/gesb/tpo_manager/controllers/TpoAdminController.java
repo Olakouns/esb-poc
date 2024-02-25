@@ -53,7 +53,7 @@ public class TpoAdminController {
     }
 
     @PutMapping("/tpo-data/{tpoDataId}/tpo-word-order")
-    public ApiResponse addTpoWordOrder(@PathVariable int tpoDataId, @RequestBody TPOWorkOrder tpoWordOrder) {
+    public TPOWorkOrder addTpoWordOrder(@PathVariable int tpoDataId, @RequestBody TPOWorkOrder tpoWordOrder) {
         return tpoAdminService.addTpoWordOrder(tpoDataId, tpoWordOrder);
     }
 
@@ -75,6 +75,11 @@ public class TpoAdminController {
     @DeleteMapping("/tpo-word-order/{tpoWordOrderId}")
     public ApiResponse deleteTpoWordOrder(@PathVariable int tpoWordOrderId) {
         return tpoAdminService.deleteTpoWordOrder(tpoWordOrderId);
+    }
+
+    @PutMapping("/tpo-word-order/{tpoWordOrderId}/failure")
+    public TPOWorkOrder addTpoWordOrderFailureToWK(@PathVariable int tpoWordOrderId, @RequestBody TPOWorkOrder tpoWordOrder) {
+        return tpoAdminService.addTpoWordOrderFailureToWK(tpoWordOrderId, tpoWordOrder);
     }
 
 }

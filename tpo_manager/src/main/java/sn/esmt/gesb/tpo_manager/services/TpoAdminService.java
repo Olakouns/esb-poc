@@ -21,11 +21,13 @@ public interface TpoAdminService {
 
     List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId);
 
-    ApiResponse addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder);
+    TPOWorkOrder addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder);
     ApiResponse addTpoWordOrderById(int tpoDataId, int tpoWordOrderId);
     ApiResponse removeTpoWordOrder(int tpoDataId, int tpoWordOrderId);
 
     TPOWorkOrder updateTpoWordOrder(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
 
     ApiResponse deleteTpoWordOrder(int tpoWordOrderId);
+
+    TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
 }

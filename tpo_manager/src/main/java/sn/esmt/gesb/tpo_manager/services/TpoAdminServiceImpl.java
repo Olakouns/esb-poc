@@ -72,11 +72,13 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     }
 
     @Override
-    public ApiResponse addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder) {
+    public TPOWorkOrder addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder) {
         if (tpoWordOrder.getId() == 0) {
             tpoWordOrder = tpoWordOrderRepository.save(tpoWordOrder);
         }
-        return this.addTpoWordOrderById(tpoDataId, tpoWordOrder.getId());
+        TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
+        tpoData.getPatterns().add(tpoWordOrder);
+        return tpoWordOrder;
     }
 
     @Override
@@ -108,5 +110,13 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         TPOWorkOrder tpoWordOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
         tpoWordOrderRepository.delete(tpoWordOrder);
         return new ApiResponse(true, "TPOWordOrder deleted successfully");
+    }
+
+    @Override
+    public TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder) {
+        TPOWorkOrder tpoWordOrderDB = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
+        tpoWordOrder = tpoWordOrderRepository.save(tpoWordOrder);
+        tpoWordOrderDB.getTpoWorkOrderFailure().add(tpoWordOrder);
+        return tpoWordOrder;
     }
 }
