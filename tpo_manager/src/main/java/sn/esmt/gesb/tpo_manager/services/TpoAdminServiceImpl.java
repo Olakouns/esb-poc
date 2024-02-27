@@ -53,6 +53,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         TPOData tpoDataDB = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
         tpoDataDB.setTpo(tpoData.getTpo());
         tpoDataDB.setTpoCondition(tpoData.getTpoCondition());
+        tpoDataDB.setCritical(tpoData.isCritical());
         // todo : to be reviewed
 //        tpoDataDB.setTpoDataOnFailure(tpoData.getTpoDataOnFailure());
         tpoDataDB.setDescription(tpoData.getDescription());

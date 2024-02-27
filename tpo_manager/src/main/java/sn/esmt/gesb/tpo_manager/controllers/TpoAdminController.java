@@ -32,7 +32,7 @@ public class TpoAdminController {
     }
 
     @PostMapping("/tpo-data")
-    public TPOData createTpoData(TPOData tpoData) {
+    public TPOData createTpoData(@RequestBody TPOData tpoData) {
         return tpoAdminService.createTpoData(tpoData);
     }
 
