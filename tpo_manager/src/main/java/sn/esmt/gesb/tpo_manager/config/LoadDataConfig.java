@@ -12,6 +12,7 @@ import sn.esmt.gesb.tpo_manager.repositories.ConstantConfigRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -76,17 +77,7 @@ public class LoadDataConfig {
                                 "         <active>${active}</active>\n" +
                                 "     </service>\n" +
                                 "</modifyServiceSubscriberRequest>")
-                        .tpoWorkOrderFailure(List.of(TPOWorkOrder.builder()
-                                .equipment("HLR")
-                                .webServiceName("ModifyServiceFailure")
-                                .template("<modifyServiceSubscriberRequest xmlns=\"http://esmt.sn/hlr_api/soam\" phoneNumber=\"${phoneNumber}\" verb=\"DELETE\">\n" +
-                                        "     <service>\n" +
-                                        "         <serviceType>${serviceType}</serviceType>\n" +
-                                        "         <targetNumber>${targetNumber}</targetNumber>\n" +
-                                        "         <active>${active}</active>\n" +
-                                        "     </service>\n" +
-                                        "</modifyServiceSubscriberRequest>")
-                                .build()))
+                        .tpoWorkOrderFailure(new ArrayList<>())
                         .build(),
                 TPOWorkOrder.builder()
                         .equipment("IN")
