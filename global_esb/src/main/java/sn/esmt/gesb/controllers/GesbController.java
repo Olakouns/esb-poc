@@ -16,6 +16,8 @@ import sn.esmt.gesb.components.QueueManagerComponent;
 import sn.esmt.gesb.soam.EsbRootActionRequest;
 import sn.esmt.gesb.soam.EsbRootActionResponse;
 
+import java.util.Date;
+
 @Endpoint
 @RequiredArgsConstructor
 @Slf4j
@@ -37,6 +39,7 @@ public class GesbController {
             throw new SoapFaultException("Queue is full");
         }
 
+        log.info("Get request {} at {}", esbRootActionRequest.getRequestId(), new Date());
         queueManagerComponent.enqueue(esbRootActionRequest);
 
         log.info("Get request from client: {}", esbRootActionRequest);

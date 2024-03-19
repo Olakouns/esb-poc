@@ -4,12 +4,13 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import sn.esmt.gesb.services.Impl.RequestProcessor;
 import sn.esmt.gesb.soam.EsbRootActionRequest;
-//import sn.esmt.gesb.wsdl.*;
 
+import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +23,8 @@ public class QueueManagerComponent {
 
     private final RequestProcessor coreService;
 
-    public final int MAX_QUEUE_SIZE = 5;
+    @Value("${max.queue.size}")
+    public int MAX_QUEUE_SIZE;
     private final ConcurrentLinkedQueue<EsbRootActionRequest> requestQueue = new ConcurrentLinkedQueue<>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -42,6 +44,7 @@ public class QueueManagerComponent {
             if (!requestQueue.isEmpty()) {
                 EsbRootActionRequest queueItem = requestQueue.poll();
                 if (queueItem != null) {
+                    log.info("Start request {} treatment  at {}", queueItem.getRequestId(), new Date());
                     processRequest(queueItem);
                 }
             }
