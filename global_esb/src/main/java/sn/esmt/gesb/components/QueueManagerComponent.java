@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import sn.esmt.gesb.services.Impl.RequestProcessor;
 import sn.esmt.gesb.soam.EsbRootActionRequest;
 
+import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,6 +44,7 @@ public class QueueManagerComponent {
             if (!requestQueue.isEmpty()) {
                 EsbRootActionRequest queueItem = requestQueue.poll();
                 if (queueItem != null) {
+                    log.info("Start request {} treatment  at {}", queueItem.getRequestId(), new Date());
                     processRequest(queueItem);
                 }
             }

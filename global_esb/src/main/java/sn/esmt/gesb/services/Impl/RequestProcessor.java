@@ -17,6 +17,7 @@ import sn.esmt.gesb.services.SagaOrchestratorService;
 import sn.esmt.gesb.soam.*;
 import sn.esmt.gesb.utils.SoapResponseParser;
 
+import java.util.Date;
 import java.util.Optional;
 
 
@@ -36,7 +37,7 @@ public class RequestProcessor {
 
     @Async
     public void processRequest(EsbRootActionRequest esbRootActionRequest) {
-        log.info("Processing request: {}", esbRootActionRequest);
+        log.info("Processing request: {} at {}", esbRootActionRequest.getRequestId(), new Date());
         try {
             TPODataDto tpoDataDto = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager", esbRootActionRequest, TPODataDto.class);
             assert tpoDataDto != null;
@@ -58,9 +59,9 @@ public class RequestProcessor {
                 return;
             }
 
-            sagaOrchestratorService.executeSaga(workflow.getWorkflowSteps(), "CALL_BACK_URL");
+            sagaOrchestratorService.executeSaga(workflow.getWorkflowSteps(), "CALL_BACK_URL", esbRootActionRequest.getRequestId());
         } catch (Exception e) {
-            log.error("Error processing request: {}", e.getMessage());
+            log.error("Error processing request {} : {}",esbRootActionRequest.getRequestId(),  e.getMessage());
         }
     }
 

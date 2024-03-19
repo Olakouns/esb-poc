@@ -7,5 +7,5 @@ import sn.esmt.gesb.dto.WorkflowStep;
 import java.util.List;
 
 public interface SagaOrchestratorService {
-    void executeSaga(List<WorkflowStep> workflowSteps, String callbackURL);
+    void executeSaga(List<WorkflowStep> workflowSteps, String callbackURL, String requestId);
 }

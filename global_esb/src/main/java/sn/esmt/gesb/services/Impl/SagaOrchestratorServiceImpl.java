@@ -8,11 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.SoapFaultException;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import sn.esmt.gesb.dto.WorkflowStep;
 import sn.esmt.gesb.services.SagaOrchestratorService;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
     private final RequestRetryForFailure requestRetry;
 
     @Override
-    public void executeSaga(List<WorkflowStep> workflowSteps, String callbackURL) {
+    public void executeSaga(List<WorkflowStep> workflowSteps, String callbackURL, String requestId) {
         for (WorkflowStep workflowStep : workflowSteps) {
             try {
                 // todo : send request here
@@ -40,6 +42,7 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
                     log.error("getFaultStringOrReason " + soapFault.getFaultStringOrReason());
                     log.error("getFaultStringOrReason " + soapFaultException);
                     */
+                    throw soapFaultException;
                 } else {
                     log.error(workflowStep.getUrl() + " " + exception.getMessage());
                 }
@@ -47,6 +50,7 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
                 break;
             }
         }
+        log.info("End request {} treatment  at {}", requestId, new Date());
     }
 
     private void rollback(List<WorkflowStep> workflowSteps, int index, String callbackURL) {
