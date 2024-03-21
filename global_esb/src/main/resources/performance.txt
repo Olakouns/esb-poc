@@ -1,0 +1,2 @@
+1 user send request from browser => 3s
+20 user send request at the same time using apache Jmeter -> 1s/req
