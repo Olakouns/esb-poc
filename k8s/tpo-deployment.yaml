@@ -1,38 +1,62 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tpo-deployment
+  name: tpo-app
+  labels:
+    app: tpo-app
 spec:
-  replicas: 4
+  replicas: 5
   selector:
     matchLabels:
-      app: app-tpo
+      app: tpo-app
   template:
     metadata:
       labels:
-        app: app-tpo
+        app: tpo-app
     spec:
       containers:
-        - name: app-tpo-container
-          image: your-registry/app-b:latest
+        - name: tpo-app
+          image: olakouns/tpo-app:1.0
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8090
           env:
-            - name: DATABASE_URL
-              value: "db-service:3306"
-            - name: SERVER_PORT
-              value: "8080"
-
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: mysql-user-password
+            - name: DB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name:  mysql-config-map
+                  key: mysql-server
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name:  mysql-config-map
+                  key: mysql-database-name
+            - name: DB_USERNAME
+#              value: root
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: mysql-user-username
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-tpo-loadbalancer
+  name: tpo-app
+  labels:
+    app: tpo-app
 spec:
+  type: LoadBalancer
   selector:
-    app: app-tpo
+    app: tpo-app
   ports:
     - protocol: TCP
-      port: 8090  # Port externe pour l'application B
-      targetPort: 8080  # Port interne sur lequel l'application B écoute
-  type: LoadBalancer
+      name: http
+      port: 8090
+      targetPort: 8090
+#      nodePort: 30000

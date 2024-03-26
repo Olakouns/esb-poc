@@ -103,7 +103,7 @@ class TpoManagerApplicationTests {
         EsbRootActionRequest esbRootActionRequest = new EsbRootActionRequest();
         esbRootActionRequest.setRequestId("1235864");
         EsbContent esbContent = new EsbContent();
-        esbContent.setVerb(VerbType.ADD);
+        esbContent.setVerb(VerbType.ADD.value());
 
 
         EsbParameter esbParameter1 = new EsbParameter();
