@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  tpo_manager:
+    image: olakouns/app-hlr:latest
+    restart: on-failure
+    ports:
+      - 8092:8092
+    networks:
+      - hlr_api_network
+    environment:
+      DB_SERVER: mysqldb
+      DB_PORT: 3306
+      DB_NAME: in_api_db
+      DB_USERNAME: "root"
+      DB_PASSWORD: "mot2P@ss"
+    depends_on:
+      - mysqldb_hlr
+    volumes:
+      - .m2:/root/.m3
+  mysqldb_hlr:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3309:3306
+    networks:
+      - hlr_api_network
+    environment:
+      MYSQL_DATABASE: hrl_api_2_db
+      MYSQL_USER: olakouns
+      MYSQL_PASSWORD: "mot2P@ss"
+      MYSQL_ROOT_PASSWORD: "mot2P@ss"
+    volumes:
+      - hlr_db:/var/lib/mysql_hlr_api
+networks:
+  hlr_api_network:
+volumes:
+  hlr_db:

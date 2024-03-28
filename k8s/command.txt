@@ -1,0 +1,48 @@
+mvn install:install-file -Dfile="share_module-1.0.jar" -DgroupId="sn.esmt" -DartifactId=spoc -Dversion="1.0-SNAPSHOT" -Dpackaging=jar
+
+
+docker build -t olakouns/app-tpo:v1.2 .
+kubectl apply -f https://k8s.io/examples/application/mysql/mysql-pv.yaml
+
+kubectl get deploy
+kubectl delete deploy tpo-deployment
+docker build -t nom_utilisateur/nom_image:tag .
+
+kubectl run -it --rm --image=mysql:latest --restart=Never mysql-client -- mysql -h mysql -ppassword
+
+docker tag esb/app-tpo:latest olakouns/app-tpo:v1.1
+
+docker push olakouns/app-tpo:v1.1
+
+kubectl service app-tpo-loadbalancer --url
+
+kubectl get pods -l app=tpo-deployment
+
+kubectl describe pod tpo-deployment-545b69f566-7g288
+
+kubectl logs tpo-deployment-64689c8df8-knnbs
+
+kubectl logs tpo-deployment-7d7f97c84f-v7wtd   --tail 500000
+
+kubectl exec -it db-deployment-9f8b9cfc6-xc2rp -- /bin/bash
+kubectl exec -it tpo-deployment-69566b758f-67x2q -- /bin/bash
+
+kubectl rollout restart deployment tpo-deployment
+
+kubectl describe svc app-tpo-loadbalancer
+
+minikube service app-tpo-loadbalancer --url
+
+
+kubectl exec -it tpo-deployment-69566b758f-67x2q -- ping db-deployment-9f8b9cfc6-hcq22
+
+
+------------------------------------
+
+java -jar  -DDB_SERVER=localhost -DDB_USERNAME=root -DDB_PASSWORD=mot2P@ss -DDB_NAME=tpo_db .\tpo_manager-0.0.1-SNAPSHOT.jar
+
+-------------------------------------------------------------------------
+
+& minikube -p minikube docker-env --shell powershell | Invoke-Expression
+
+echo -n 'mot2P@ss' | base64
