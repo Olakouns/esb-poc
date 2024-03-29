@@ -4,7 +4,9 @@ package sn.esmt.gesb.tpo_manager.config;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
@@ -14,6 +16,7 @@ import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @Slf4j
@@ -23,6 +26,9 @@ public class LoadDataConfig {
     private final TPODataRepository tpoDataRepository;
     private final TPOWordOrderRepository tpoWordOrderRepository;
     private final ConstantConfigRepository constantConfigRepository;
+
+    @Autowired
+    private Environment environment;
 
     @PostConstruct
     private void loadData() {
@@ -201,16 +207,17 @@ public class LoadDataConfig {
 
     private void createConstantConfig() {
         log.info("Creating ConstantConfig...");
+        boolean isDeployment = environment.getActiveProfiles().length > 0 && Objects.equals(environment.getActiveProfiles()[0], "k8s");
         ConstantConfig constantConfigIN = ConstantConfig
                 .builder()
                 .keyName("IN")
-                .valueContent("http://localhost:8091/ws")
+                .valueContent("http://" + (isDeployment ? "in-app" : "localhost") + ":8091/ws")
                 .build();
 
         ConstantConfig constantConfigHLR = ConstantConfig
                 .builder()
                 .keyName("HLR")
-                .valueContent("http://localhost:8092/ws")
+                .valueContent("http://" + (isDeployment ? "hlr-app" : "localhost") + ":8092/ws")
                 .build();
         constantConfigRepository.saveAll(List.of(constantConfigIN, constantConfigHLR));
     }

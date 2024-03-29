@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tpo-app
+  name: in-app
   labels:
-    app: tpo-app
+    app: in-app
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
-      app: tpo-app
+      app: in-app
   template:
     metadata:
       labels:
-        app: tpo-app
+        app: in-app
     spec:
       containers:
-        - name: tpo-app
-          image: olakouns/tpo-app:1.0
+        - name: in-app
+          image: olakouns/in-app:1.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 8090
+              containerPort: 8091
           env:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mysql-pass
-                  key: mysql-user-password
+                  key: mysql-root-password
             - name: DB_SERVER
               valueFrom:
                 configMapKeyRef:
@@ -36,27 +36,23 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name:  mysql-config-map
-                  key: mysql-database-name
+                  key: mysql-database-in-name
             - name: DB_USERNAME
-#              value: root
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-config-map
-                  key: mysql-user-username
+              value: root
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: tpo-app
+  name: in-app
   labels:
-    app: tpo-app
+    app: in-app
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
-    app: tpo-app
+    app: in-app
   ports:
     - protocol: TCP
       name: http
-      port: 8090
-      targetPort: 8090
-#      nodePort: 30000
+      port: 8091
+      targetPort: 8091
+      nodePort: 30080

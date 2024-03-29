@@ -46,3 +46,13 @@ java -jar  -DDB_SERVER=localhost -DDB_USERNAME=root -DDB_PASSWORD=mot2P@ss -DDB_
 & minikube -p minikube docker-env --shell powershell | Invoke-Expression
 
 echo -n 'mot2P@ss' | base64
+
+-------------------------------------------------------------------------
+java -jar -DSPRING_PROFILES_ACTIVE=k8s -DDB_USERNAME=root -DDB_PASSWORD=mot2P@ss -DDB_NAME=in_api_db mon_application.jar
+
+java -jar -Dspring.profiles.active=k8s application.jar
+java -jar .\in_api-0.0.1-SNAPSHOT.jar --spring.profiles.active=k8s --DB_SERVER=localhost --DB_USERNAME=root --DB_PASSWORD=mot2P@ss --DB_NAME=in_api_db
+
+--------------------------------------------
+minikube service  in-app --url
+http://127.0.0.1:57211/ws/in_api.wsdl

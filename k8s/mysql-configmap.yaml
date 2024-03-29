@@ -3,6 +3,11 @@ kind: ConfigMap
 metadata:
   name: mysql-config-map
 data:
-  mysql-server: app-mysql
-  mysql-database-name: tpo_db
-  mysql-user-username: tpo_user
+  mysql-server: "app-mysql"
+  mysql-database-name: "tpo_db"
+  mysql-database-in-name: "in_api_db"
+  mysql-database-hlr-name: "hrl_api_2_db"
+  mysql-user-username: "tpo_user"
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS in_api_db;
+    CREATE DATABASE IF NOT EXISTS hrl_api_2_db;

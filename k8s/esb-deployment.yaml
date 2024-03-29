@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esb-app
+  labels:
+    app: esb-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: esb-app
+  template:
+    metadata:
+      labels:
+        app: esb-app
+    spec:
+      containers:
+        - name: esb-app
+          image: olakouns/esb-app:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8093
+          env:
+            - name: TPO_HOST
+              value: tpo-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: esb-app
+  labels:
+    app: esb-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: esb-app
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8093
+      targetPort: 8093

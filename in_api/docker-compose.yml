@@ -1,34 +1,37 @@
 version: "3.8"
 services:
   tpo_manager:
-    image: olakouns/app-tpo:v1.5
+    image: olakouns/app-in:latest
+    restart: on-failure
     ports:
-      - 8090:8090
+      - 8091:8091
     networks:
-      - springapimysql8
+      - in_api_network
     environment:
-      DATABASE_URL: mysqldb2:3306
-      DATABASE_USERNAME: "root"
-      DATABASE_PASSWORD: "mot2P@ss"
+      DB_SERVER: mysqldb
+      DB_PORT: 3306
+      DB_NAME: in_api_db
+      DB_USERNAME: "root"
+      DB_PASSWORD: "mot2P@ss"
     depends_on:
-      - mysqldb2
+      - mysqldb
     volumes:
       - .m2:/root/.m3
-  mysqldb2:
+  mysqldb:
     image: mysql:latest
     restart: always
     ports:
       - 3308:3306
     networks:
-      - springapimysql8
+      - in_api_network
     environment:
-      MYSQL_DATABASE: tpo_db
+      MYSQL_DATABASE: in_api_db
       MYSQL_USER: olakouns
       MYSQL_PASSWORD: "mot2P@ss"
       MYSQL_ROOT_PASSWORD: "mot2P@ss"
     volumes:
-      - db2:/var/lib/mysql8
+      - in_db:/var/lib/mysql_in_api
 networks:
-  springapimysql8:
+  in_api_network:
 volumes:
-  db2:
+  in_db:
