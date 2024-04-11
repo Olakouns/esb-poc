@@ -37,7 +37,7 @@ public class RequestProcessor {
 
     @Async
     public void processRequest(EsbRootActionRequest esbRootActionRequest) {
-        log.info("Processing request: {} at {}", esbRootActionRequest.getRequestId(), new Date());
+        log.info("Processing request: {} at {}", esbRootActionRequest.getRequestId(), new Date().getTime());
         try {
             TPODataDto tpoDataDto = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager", esbRootActionRequest, TPODataDto.class);
             assert tpoDataDto != null;

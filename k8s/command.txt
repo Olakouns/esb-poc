@@ -56,3 +56,9 @@ java -jar .\in_api-0.0.1-SNAPSHOT.jar --spring.profiles.active=k8s --DB_SERVER=l
 --------------------------------------------
 minikube service  in-app --url
 http://127.0.0.1:57211/ws/in_api.wsdl
+
+
+- changer le wsdl en httpn request avec un corps xml
+- faire les tests de performance avec 80 requetes au total
+- sortir les logs : temps moyens des requetes par pods
+- mettre l'IN et le HLR aussi en pods => histoire de simuler la replication

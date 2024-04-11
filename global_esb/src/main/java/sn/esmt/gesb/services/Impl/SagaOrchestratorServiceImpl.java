@@ -50,7 +50,7 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
                 break;
             }
         }
-        log.info("End request {} treatment  at {}", requestId, new Date());
+        log.info("End request {} treatment  at {}", requestId, new Date().getTime());
     }
 
     private void rollback(List<WorkflowStep> workflowSteps, int index, String callbackURL) {
