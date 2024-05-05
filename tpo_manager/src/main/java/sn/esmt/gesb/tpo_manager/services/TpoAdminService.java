@@ -26,6 +26,7 @@ public interface TpoAdminService {
     List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId);
 
     TPOWorkOrder addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder);
+    ApiResponse addManyTpoWordOrder(int tpoDataId, List<TPOWorkOrder> tpoWordOrders);
     ApiResponse addTpoWordOrderById(int tpoDataId, int tpoWordOrderId);
     ApiResponse removeTpoWordOrder(int tpoDataId, int tpoWordOrderId);
 
@@ -36,4 +37,6 @@ public interface TpoAdminService {
     TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
 
     ApiResponse updateTpoDataPatterns(int id, LinkedList<TPOWorkOrder> tpoData);
+
+    List<TPOWorkOrder> getAllTpoWordOrders();
 }

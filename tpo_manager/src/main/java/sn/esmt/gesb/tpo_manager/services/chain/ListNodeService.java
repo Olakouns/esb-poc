@@ -1,6 +1,7 @@
 package sn.esmt.gesb.tpo_manager.services.chain;
 
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sn.esmt.gesb.dto.ApiResponse;

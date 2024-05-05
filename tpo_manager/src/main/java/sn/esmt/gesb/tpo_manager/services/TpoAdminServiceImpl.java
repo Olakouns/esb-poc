@@ -84,7 +84,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
     @Override
     public List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId) {
-        return tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId)).getPatterns();
+        return tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId)).getLinkedList();
     }
 
     @Override
@@ -100,9 +100,27 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         } else {
             ListNode listNode = listNodeService.createListNode(tpoWordOrder);
             tpoData.setListNode(listNode);
-            tpoDataRepository.save(tpoData);
         }
+        tpoDataRepository.save(tpoData);
         return tpoWordOrder;
+    }
+
+    @Override
+    public ApiResponse addManyTpoWordOrder(int tpoDataId, List<TPOWorkOrder> tpoWordOrders) {
+        if (!tpoDataRepository.existsById(tpoDataId)) {
+            throw new ResourceNotFoundException("TPOData", "id", tpoDataId);
+        }
+
+        TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
+        for (TPOWorkOrder tpoWordOrder : tpoWordOrders) {
+            tpoData.getPatterns().add(tpoWordOrder);
+        }
+
+        tpoData.setListNode(null);
+        tpoDataRepository.save(tpoData);
+        tpoData.setListNode(listNodeService.createListNode(new LinkedList<>(tpoData.getPatterns())));
+        tpoDataRepository.save(tpoData);
+        return new ApiResponse(true, "TPOWordOrder added successfully");
     }
 
     @Override
@@ -117,6 +135,15 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     public ApiResponse removeTpoWordOrder(int tpoDataId, int tpoWordOrderId) {
         TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
         tpoData.getPatterns().removeIf(tpoWordOrder -> tpoWordOrder.getId() == tpoWordOrderId);
+        tpoData.setListNode(null);
+        tpoDataRepository.save(tpoData);
+        entityManager.detach(tpoData);
+        if (tpoData.getPatterns().isEmpty()) {
+            return new ApiResponse(true, "TPOWordOrder removed successfully");
+        }
+        ListNode node = listNodeService.createListNode(new LinkedList<>(tpoData.getPatterns()));
+        tpoData.setListNode(node);
+        tpoDataRepository.save(tpoData);
         return new ApiResponse(true, "TPOWordOrder removed successfully");
     }
 
@@ -159,5 +186,10 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         tpoData.setListNode(listNodeService.createListNode(tpoWorkOrders));
         tpoDataRepository.save(tpoData);
         return new ApiResponse(true, "TPOData updated successfully");
+    }
+
+    @Override
+    public List<TPOWorkOrder> getAllTpoWordOrders() {
+        return tpoWordOrderRepository.findAll();
     }
 }

@@ -68,9 +68,20 @@ public class TpoAdminController {
         return tpoAdminService.addTpoWordOrder(tpoDataId, tpoWordOrder);
     }
 
+    @PutMapping("/tpo-data/{tpoDataId}/tpo-word-orders/add-many")
+    public ApiResponse addManyTpoWordOrder(@PathVariable int tpoDataId, @RequestBody List<TPOWorkOrder> tpoWordOrders) {
+        return tpoAdminService.addManyTpoWordOrder(tpoDataId, tpoWordOrders);
+    }
+
     @PutMapping("/tpo-data/{tpoDataId}/tpo-word-order/{tpoWordOrderId}")
     public ApiResponse addTpoWordOrderById(@PathVariable int tpoDataId, @PathVariable int tpoWordOrderId) {
         return tpoAdminService.addTpoWordOrderById(tpoDataId, tpoWordOrderId);
+    }
+
+
+    @GetMapping("/tpo-word-orders")
+    public List<TPOWorkOrder> getAllTpoWordOrders() {
+        return tpoAdminService.getAllTpoWordOrders();
     }
 
     @DeleteMapping("/tpo-data/{tpoDataId}/tpo-word-order/{tpoWordOrderId}")

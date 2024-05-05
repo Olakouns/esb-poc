@@ -59,7 +59,7 @@ public class TPOServiceImpl implements TPOService {
         TPOData tpoData = tpoDataRepository.findById(tpoId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoId));
         Workflow workflow = new Workflow();
         try {
-            for (TPOWorkOrder pattern : tpoData.getPatterns()) {
+            for (TPOWorkOrder pattern : tpoData.getLinkedList()) {
                 if(pattern.isServiceTemplate()){
                     if (esbRootActionRequest.getEsbContent().getEsbServices() == null || esbRootActionRequest.getEsbContent().getEsbServices().getEsbService().isEmpty()) {
                         throw new BadRequestException("There are no service nodes or esbservice is null");

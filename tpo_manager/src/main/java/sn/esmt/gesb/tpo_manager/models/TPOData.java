@@ -34,14 +34,16 @@ public class TPOData implements Serializable {
     @JsonIgnore
     @ManyToOne
     private ListNode listNode;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     private List<TPOWorkOrder> patterns = new LinkedList<>();
     private boolean isCritical;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<TPOWorkOrder> previousStatesData;
+    @Transient
+    private List<TPOWorkOrder> linkedList;
 
-    public List<TPOWorkOrder> getPatterns() {
+    public List<TPOWorkOrder> getLinkedList() {
         LinkedList<TPOWorkOrder> patternsLink = new LinkedList<>();
         ListNode current = listNode;
         if (current == null) {
