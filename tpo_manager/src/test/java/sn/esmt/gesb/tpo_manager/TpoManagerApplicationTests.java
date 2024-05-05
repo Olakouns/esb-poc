@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import sn.esmt.gesb.dto.Workflow;
 import sn.esmt.gesb.soam.*;
 import sn.esmt.gesb.tpo_manager.builder.SoapRequestBuilder;
+import sn.esmt.gesb.tpo_manager.models.chain.ListNode;
+import sn.esmt.gesb.tpo_manager.repositories.chain.ListNodeRepository;
 import sn.esmt.gesb.tpo_manager.services.TPOService;
 
 import java.io.IOException;
@@ -32,6 +34,9 @@ class TpoManagerApplicationTests {
 
     @Autowired
     private TPOService tpoService;
+
+    @Autowired
+    private ListNodeRepository listNodeRepository;
 
     @Test
     void contextLoads() {
@@ -103,7 +108,7 @@ class TpoManagerApplicationTests {
         EsbRootActionRequest esbRootActionRequest = new EsbRootActionRequest();
         esbRootActionRequest.setRequestId("1235864");
         EsbContent esbContent = new EsbContent();
-        esbContent.setVerb(VerbType.ADD.value());
+        esbContent.setVerb(VerbType.ADD.name());
 
 
         EsbParameter esbParameter1 = new EsbParameter();
@@ -131,7 +136,7 @@ class TpoManagerApplicationTests {
         EsbServices esbServices = new EsbServices();
 
         EsbService esbService = new EsbService();
-        esbService.setVerb(VerbType.ADD);
+        esbService.setVerb(VerbType.ADD.name());
 
 
         EsbParameter esbParameter5 = new EsbParameter();
@@ -152,7 +157,7 @@ class TpoManagerApplicationTests {
         esbService.getEsbParameter().addAll(List.of(esbParameter6, esbParameter7, esbParameter5));
 
         EsbService esbService2 = new EsbService();
-        esbService2.setVerb(VerbType.ADD);
+        esbService2.setVerb(VerbType.ADD.name());
 
         EsbParameter esbParameter51 = new EsbParameter();
         esbParameter51.setName("active");
@@ -180,6 +185,35 @@ class TpoManagerApplicationTests {
         Workflow workflow = tpoService.getMappingData(1, esbRootActionRequest);
         System.err.println(workflow);
         Assertions.assertEquals(workflow.getWorkflowSteps().size(), 5);
+    }
+
+    @Test
+    public void testListNode() {
+        ListNode listNode = ListNode.builder()
+                .dataId(1)
+                .nextNode(
+                        ListNode
+                                .builder()
+                                .dataId(2)
+                                .nextNode(
+                                        ListNode
+                                                .builder()
+                                                .dataId(3)
+                                                .nextNode(
+                                                        ListNode
+                                                                .builder()
+                                                                .dataId(4)
+                                                                .nextNode(null)
+                                                                .build())
+                                                .build()
+                                ).build()
+                ).build();
+        listNodeRepository.save(listNode);
+        do {
+            System.out.println(listNode.getDataId());
+            listNode = listNode.getNextNode();
+        } while (listNode != null);
+
     }
 
 }

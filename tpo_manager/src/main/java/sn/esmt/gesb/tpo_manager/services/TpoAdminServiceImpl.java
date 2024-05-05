@@ -1,5 +1,6 @@
 package sn.esmt.gesb.tpo_manager.services;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,9 +11,13 @@ import sn.esmt.gesb.dto.ApiResponse;
 import sn.esmt.gesb.tpo_manager.exceptions.ResourceNotFoundException;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
+import sn.esmt.gesb.tpo_manager.models.chain.ListNode;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
+import sn.esmt.gesb.tpo_manager.services.chain.ListNodeService;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -24,6 +29,8 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
     private final TPODataRepository tpoDataRepository;
     private final TPOWordOrderRepository tpoWordOrderRepository;
+    private final ListNodeService listNodeService;
+    private final EntityManager entityManager;
 
 
     private Specification<TPOData> getSpecification(String search) {
@@ -61,6 +68,14 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     }
 
     @Override
+    public TPOData getTpoDataById(int id) {
+        TPOData tpoData = tpoDataRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", id));
+        tpoData.setPatterns(new LinkedList<>());
+        tpoData.setPreviousStatesData(new LinkedList<>());
+        return tpoData;
+    }
+
+    @Override
     public ApiResponse deleteTpoData(int tpoDataId) {
         TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
         tpoDataRepository.delete(tpoData);
@@ -79,6 +94,14 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         }
         TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
         tpoData.getPatterns().add(tpoWordOrder);
+
+        if (tpoData.getListNode() != null) {
+            listNodeService.addEnd(tpoData.getListNode(), tpoWordOrder);
+        } else {
+            ListNode listNode = listNodeService.createListNode(tpoWordOrder);
+            tpoData.setListNode(listNode);
+            tpoDataRepository.save(tpoData);
+        }
         return tpoWordOrder;
     }
 
@@ -119,5 +142,22 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         tpoWordOrder = tpoWordOrderRepository.save(tpoWordOrder);
         tpoWordOrderDB.getTpoWorkOrderFailure().add(tpoWordOrder);
         return tpoWordOrder;
+    }
+
+    @Override
+    public ApiResponse updateTpoDataPatterns(int id, LinkedList<TPOWorkOrder> tpoWorkOrders) {
+        TPOData tpoData = tpoDataRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", id));
+        entityManager.detach(tpoData);
+        tpoData.setPatterns(tpoWorkOrders);
+        if (tpoData.getListNode() != null) {
+            ListNode node = tpoData.getListNode();
+            tpoData.setListNode(null);
+            tpoData = tpoDataRepository.save(tpoData);
+            entityManager.detach(tpoData);
+            listNodeService.deleteListNode(node.getId());
+        }
+        tpoData.setListNode(listNodeService.createListNode(tpoWorkOrders));
+        tpoDataRepository.save(tpoData);
+        return new ApiResponse(true, "TPOData updated successfully");
     }
 }

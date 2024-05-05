@@ -199,7 +199,7 @@ class GlobalEsbApplicationTests {
                         ArrayList<?> list = (ArrayList<?>) value;
                         for (Object subObject : list) {
                             EsbContent esbContent2 = getEsbParameters(subObject);
-                            EsbService esbService = buildEsbService(VerbType.ADD, esbContent2.getEsbParameter());
+                            EsbService esbService = buildEsbService(VerbType.ADD.name(), esbContent2.getEsbParameter());
                             esbServices.getEsbService().add(esbService);
                         }
                     } else {
@@ -228,7 +228,7 @@ class GlobalEsbApplicationTests {
         return esbParameter;
     }
 
-    public static EsbService buildEsbService(VerbType verb, List<EsbParameter> esbParameter) {
+    public static EsbService buildEsbService(String verb, List<EsbParameter> esbParameter) {
         EsbService esbService = new EsbService();
         esbService.setVerb(verb);
         esbService.getEsbParameter().addAll(esbParameter);

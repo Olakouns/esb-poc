@@ -5,6 +5,7 @@ import sn.esmt.gesb.dto.ApiResponse;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public interface TpoAdminService {
@@ -15,6 +16,9 @@ public interface TpoAdminService {
     TPOData createTpoData(TPOData tpoData);
 
     TPOData updateTpoData(int id, TPOData tpoData);
+
+    TPOData getTpoDataById(int id);
+
 
     ApiResponse deleteTpoData(int id);
 
@@ -30,4 +34,6 @@ public interface TpoAdminService {
     ApiResponse deleteTpoWordOrder(int tpoWordOrderId);
 
     TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
+
+    ApiResponse updateTpoDataPatterns(int id, LinkedList<TPOWorkOrder> tpoData);
 }

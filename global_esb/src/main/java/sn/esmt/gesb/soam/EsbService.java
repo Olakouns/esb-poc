@@ -46,7 +46,7 @@ public class EsbService {
     @XmlElement(required = true)
     protected List<EsbParameter> esbParameter;
     @XmlAttribute(name = "verb", required = true)
-    protected VerbType verb;
+    protected String verb;
 
     /**
      * Gets the value of the esbParameter property.
@@ -85,7 +85,7 @@ public class EsbService {
      *     {@link VerbType }
      *     
      */
-    public VerbType getVerb() {
+    public String getVerb() {
         return verb;
     }
 
@@ -97,7 +97,7 @@ public class EsbService {
      *     {@link VerbType }
      *     
      */
-    public void setVerb(VerbType value) {
+    public void setVerb(String value) {
         this.verb = value;
     }
 

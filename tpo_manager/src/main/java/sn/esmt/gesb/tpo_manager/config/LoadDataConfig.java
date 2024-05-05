@@ -13,8 +13,11 @@ import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.repositories.ConstantConfigRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
+import sn.esmt.gesb.tpo_manager.repositories.chain.ListNodeRepository;
+import sn.esmt.gesb.tpo_manager.services.chain.ListNodeService;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +29,8 @@ public class LoadDataConfig {
     private final TPODataRepository tpoDataRepository;
     private final TPOWordOrderRepository tpoWordOrderRepository;
     private final ConstantConfigRepository constantConfigRepository;
+    private final ListNodeService listNodeService;
+    private final ListNodeRepository listNodeRepository;
 
     @Autowired
     private Environment environment;
@@ -35,6 +40,7 @@ public class LoadDataConfig {
         log.info("Loading data...");
 //        tpoDataRepository.deleteAll();
 //        tpoWordOrderRepository.deleteAll();
+//        listNodeRepository.deleteAll();
 
         if (tpoDataRepository.count() == 0) {
             createTPOData();
@@ -110,7 +116,10 @@ public class LoadDataConfig {
                                 "</rechargingRequest>")
                         .build()
         ));
+        tpoData = tpoDataRepository.save(tpoData);
+        tpoData.setListNode(listNodeService.createListNode(new LinkedList<>(tpoData.getPatterns())));
         tpoDataRepository.save(tpoData);
+
 
         // TPO_DELETE_SUBSCRIBER_PRE_PAID
         TPOData tpoDataDelete = new TPOData();
@@ -168,6 +177,8 @@ public class LoadDataConfig {
                         .build()
         ));
 
+        tpoDataDelete = tpoDataRepository.save(tpoDataDelete);
+        tpoDataDelete.setListNode(listNodeService.createListNode(new LinkedList<>(tpoDataDelete.getPatterns())));
         tpoDataRepository.save(tpoDataDelete);
 
         // TPO_SUSPEND_OR_RESET_SERVICE_PRE_PAID
@@ -202,6 +213,8 @@ public class LoadDataConfig {
                         .build()
         ));
 
+        tpoDataSuspendOrReset = tpoDataRepository.save(tpoDataSuspendOrReset);
+        tpoDataSuspendOrReset.setListNode(listNodeService.createListNode(new LinkedList<>(tpoDataSuspendOrReset.getPatterns())));
         tpoDataRepository.save(tpoDataSuspendOrReset);
     }
 

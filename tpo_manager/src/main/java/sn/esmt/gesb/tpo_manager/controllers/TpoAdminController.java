@@ -10,6 +10,7 @@ import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.services.TpoAdminService;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -36,9 +37,19 @@ public class TpoAdminController {
         return tpoAdminService.createTpoData(tpoData);
     }
 
-    @PutMapping("/tpo-data/{id}")
+    @PutMapping("/tpo-data/{id}/edit-flow")
     public TPOData updateTpoData(@PathVariable int id, @RequestBody TPOData tpoData) {
         return tpoAdminService.updateTpoData(id, tpoData);
+    }
+
+    @GetMapping("/tpo-data/{id}")
+    public TPOData getTpoDataById(@PathVariable int id) {
+        return tpoAdminService.getTpoDataById(id);
+    }
+
+    @PutMapping("/tpo-data/{id}")
+    public ApiResponse updateTpoDataPatterns(@PathVariable int id, @RequestBody LinkedList<TPOWorkOrder> tpoData) {
+        return tpoAdminService.updateTpoDataPatterns(id, tpoData);
     }
 
     @DeleteMapping("/tpo-data/{id}")
