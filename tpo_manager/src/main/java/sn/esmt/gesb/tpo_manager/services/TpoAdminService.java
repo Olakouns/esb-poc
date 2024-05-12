@@ -2,6 +2,7 @@ package sn.esmt.gesb.tpo_manager.services;
 
 import org.springframework.data.domain.Page;
 import sn.esmt.gesb.dto.ApiResponse;
+import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 
@@ -39,4 +40,12 @@ public interface TpoAdminService {
     ApiResponse updateTpoDataPatterns(int id, LinkedList<TPOWorkOrder> tpoData);
 
     List<TPOWorkOrder> getAllTpoWordOrders();
+
+    List<ConstantConfig> getAllConstantConfig();
+
+    ConstantConfig createConstantConfig(ConstantConfig constantConfig);
+
+    ConstantConfig updateConstantConfig(int id, ConstantConfig constantConfig);
+
+    ApiResponse deleteConstantConfig(int id);
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import sn.esmt.gesb.dto.ApiResponse;
+import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.services.TpoAdminService;
@@ -102,6 +103,27 @@ public class TpoAdminController {
     @PutMapping("/tpo-word-order/{tpoWordOrderId}/failure")
     public TPOWorkOrder addTpoWordOrderFailureToWK(@PathVariable int tpoWordOrderId, @RequestBody TPOWorkOrder tpoWordOrder) {
         return tpoAdminService.addTpoWordOrderFailureToWK(tpoWordOrderId, tpoWordOrder);
+    }
+
+
+    @GetMapping("/constant-config")
+    public List<ConstantConfig> getAllConstantConfig() {
+        return tpoAdminService.getAllConstantConfig();
+    }
+
+    @PostMapping("/constant-config")
+    public ConstantConfig createConstantConfig(@RequestBody ConstantConfig constantConfig) {
+        return tpoAdminService.createConstantConfig(constantConfig);
+    }
+
+    @PutMapping("/constant-config/{id}")
+    public ConstantConfig updateConstantConfig(@PathVariable int id, @RequestBody ConstantConfig constantConfig) {
+        return tpoAdminService.updateConstantConfig(id, constantConfig);
+    }
+
+    @DeleteMapping("/constant-config/{id}")
+    public ApiResponse deleteConstantConfig(@PathVariable int id) {
+        return tpoAdminService.deleteConstantConfig(id);
     }
 
 }

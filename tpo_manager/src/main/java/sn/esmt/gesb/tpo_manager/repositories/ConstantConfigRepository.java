@@ -5,6 +5,8 @@ import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 
 import java.util.Optional;
 
-public interface ConstantConfigRepository extends JpaRepository<ConstantConfig, Long> {
+public interface ConstantConfigRepository extends JpaRepository<ConstantConfig, Integer> {
     Optional<ConstantConfig> findByKeyName(String key);
+
+    boolean existsByKeyName(String keyName);
 }

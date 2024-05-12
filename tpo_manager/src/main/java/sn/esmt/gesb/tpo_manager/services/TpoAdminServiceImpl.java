@@ -8,10 +8,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import sn.esmt.gesb.dto.ApiResponse;
+import sn.esmt.gesb.tpo_manager.exceptions.RequestNotAcceptableException;
 import sn.esmt.gesb.tpo_manager.exceptions.ResourceNotFoundException;
+import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 import sn.esmt.gesb.tpo_manager.models.chain.ListNode;
+import sn.esmt.gesb.tpo_manager.repositories.ConstantConfigRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
 import sn.esmt.gesb.tpo_manager.services.chain.ListNodeService;
@@ -31,6 +34,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     private final TPOWordOrderRepository tpoWordOrderRepository;
     private final ListNodeService listNodeService;
     private final EntityManager entityManager;
+    private final ConstantConfigRepository constantConfigRepository;
 
 
     private Specification<TPOData> getSpecification(String search) {
@@ -191,5 +195,40 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     @Override
     public List<TPOWorkOrder> getAllTpoWordOrders() {
         return tpoWordOrderRepository.findAll();
+    }
+
+    @Override
+    public List<ConstantConfig> getAllConstantConfig() {
+        return constantConfigRepository.findAll();
+    }
+
+    @Override
+    public ConstantConfig createConstantConfig(ConstantConfig constantConfig) {
+        if (constantConfigRepository.existsByKeyName(constantConfig.getKeyName())) {
+            throw new RequestNotAcceptableException(constantConfig.getKeyName() + " already exist");
+        }
+        return constantConfigRepository.save(constantConfig);
+    }
+
+    @Override
+    public ConstantConfig updateConstantConfig(int id, ConstantConfig constantConfig) {
+        ConstantConfig constantConfigDb = constantConfigRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("ConstantConfig", "id", id));
+        constantConfigDb.setValueContent(constantConfig.getValueContent());
+        constantConfigDb.setDescription(constantConfig.getDescription());
+
+        if ((!constantConfigDb.getKeyName().equals(constantConfig.getKeyName())) && constantConfigRepository.existsByKeyName(constantConfig.getKeyName())) {
+            throw new RequestNotAcceptableException(constantConfig.getKeyName() + " already exist");
+        }
+        constantConfigDb.setKeyName(constantConfig.getKeyName());
+        return constantConfigRepository.save(constantConfigDb);
+    }
+
+    @Override
+    public ApiResponse deleteConstantConfig(int id) {
+        if (!constantConfigRepository.existsById(id)) {
+            throw new ResourceNotFoundException("ConstantConfig", "id", id);
+        }
+        constantConfigRepository.deleteById(id);
+        return new ApiResponse(true, "ConstantConfig deleted successfully");
     }
 }

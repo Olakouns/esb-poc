@@ -15,7 +15,8 @@ public class ConstantConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String keyName;
+    @Column(unique = true)
+    private String keyName; // IN OR HLR
     private String valueContent;
     private String description;
 }
