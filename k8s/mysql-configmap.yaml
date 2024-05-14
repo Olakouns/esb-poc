@@ -4,6 +4,7 @@ metadata:
   name: mysql-config-map
 data:
   mysql-server: "app-mysql"
+  mysql-in-server: "app-mysql-in"
   mysql-database-name: "tpo_db"
   mysql-database-in-name: "in_api_db"
   mysql-database-hlr-name: "hrl_api_2_db"

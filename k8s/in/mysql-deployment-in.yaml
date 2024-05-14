@@ -71,7 +71,7 @@ spec:
                   key: mysql-user-password
           livenessProbe:
             tcpSocket:
-              port: 3307
+              port: 3306
           ports:
             - containerPort: 3307
               name: mysql
