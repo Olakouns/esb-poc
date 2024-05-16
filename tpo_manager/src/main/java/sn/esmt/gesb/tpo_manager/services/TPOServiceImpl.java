@@ -102,7 +102,7 @@ public class TPOServiceImpl implements TPOService {
         WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters);
         workflowStep.setWebServiceClassName(pattern.getWebServiceClassName());
         if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
-            for (TPOWorkOrder tpoWorkOrderFailure : pattern.getTpoWorkOrderFailure()) {
+            for (TPOWorkOrder tpoWorkOrderFailure : pattern.getLinkedList()) {
                 WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbParameters);
                 workflowStep.getFailureSteps().add(workflowStepFailure);
             }

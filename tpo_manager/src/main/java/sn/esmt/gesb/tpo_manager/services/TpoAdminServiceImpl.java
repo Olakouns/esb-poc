@@ -111,9 +111,9 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
     @Override
     public ApiResponse addManyTpoWordOrder(int tpoDataId, List<TPOWorkOrder> tpoWordOrders) {
-        if (!tpoDataRepository.existsById(tpoDataId)) {
-            throw new ResourceNotFoundException("TPOData", "id", tpoDataId);
-        }
+//        if (!tpoDataRepository.existsById(tpoDataId)) {
+//            throw new ResourceNotFoundException("TPOData", "id", tpoDataId);
+//        }
 
         TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
         for (TPOWorkOrder tpoWordOrder : tpoWordOrders) {
@@ -230,5 +230,20 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         }
         constantConfigRepository.deleteById(id);
         return new ApiResponse(true, "ConstantConfig deleted successfully");
+    }
+
+    @Override
+    public TPOWorkOrder addWordOrder(TPOWorkOrder tpoWordOrder) {
+        return tpoWordOrderRepository.save(tpoWordOrder);
+    }
+
+    @Override
+    public ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders) {
+        TPOWorkOrder tpoWorkOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWorkOrder", "id", tpoWordOrderId));
+        tpoWorkOrder.setTpoWorkOrderFailure(tpoWordOrders);
+        tpoWordOrderRepository.save(tpoWorkOrder);
+        tpoWorkOrder.setListNode(listNodeService.createListNode(new LinkedList<>(tpoWorkOrder.getTpoWorkOrderFailure())));
+        tpoWordOrderRepository.save(tpoWorkOrder);
+        return new ApiResponse(true, "TPOWordOrder added successfully");
     }
 }

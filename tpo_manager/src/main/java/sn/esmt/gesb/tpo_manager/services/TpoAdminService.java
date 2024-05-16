@@ -48,4 +48,8 @@ public interface TpoAdminService {
     ConstantConfig updateConstantConfig(int id, ConstantConfig constantConfig);
 
     ApiResponse deleteConstantConfig(int id);
+
+    TPOWorkOrder addWordOrder(TPOWorkOrder tpoWordOrder);
+
+    ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders);
 }
