@@ -1,5 +1,6 @@
 package sn.esmt.gesb.tpo_manager;
 
+import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -19,8 +20,10 @@ import sn.esmt.gesb.tpo_manager.models.chain.ListNode;
 import sn.esmt.gesb.tpo_manager.repositories.chain.ListNodeRepository;
 import sn.esmt.gesb.tpo_manager.services.TPOService;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,6 +217,12 @@ class TpoManagerApplicationTests {
             listNode = listNode.getNextNode();
         } while (listNode != null);
 
+    }
+
+    @Test
+    public void testSignedKey() {
+        String SECRET_KEY = "q3t6w9zCFJNcQfTjWnq3t6w9zCFJNcQfTjWnZr4u7xADGKaPd";
+        SecretKey SIGNING_KEY = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
 }
