@@ -242,7 +242,11 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         TPOWorkOrder tpoWorkOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWorkOrder", "id", tpoWordOrderId));
         tpoWorkOrder.setTpoWorkOrderFailure(tpoWordOrders);
         tpoWordOrderRepository.save(tpoWorkOrder);
-        tpoWorkOrder.setListNode(listNodeService.createListNode(new LinkedList<>(tpoWorkOrder.getTpoWorkOrderFailure())));
+        if (!tpoWordOrders.isEmpty()) {
+            tpoWorkOrder.setListNode(listNodeService.createListNode(new LinkedList<>(tpoWorkOrder.getTpoWorkOrderFailure())));
+        } else {
+            tpoWorkOrder.setListNode(null);
+        }
         tpoWordOrderRepository.save(tpoWorkOrder);
         return new ApiResponse(true, "TPOWordOrder added successfully");
     }

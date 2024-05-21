@@ -225,12 +225,14 @@ public class LoadDataConfig {
                 .builder()
                 .keyName("IN")
                 .valueContent("http://" + (isDeployment ? "in-app" : "localhost") + ":8091/ws")
+                .wsdlDoc("http://" + (isDeployment ? "in-app" : "localhost") + ":8091/ws/in_api.wsdl")
                 .build();
 
         ConstantConfig constantConfigHLR = ConstantConfig
                 .builder()
                 .keyName("HLR")
                 .valueContent("http://" + (isDeployment ? "hlr-app" : "localhost") + ":8092/ws")
+                .wsdlDoc("http://" + (isDeployment ? "hlr-app" : "localhost") + ":8092/ws/hlr_api.wsdl")
                 .build();
         constantConfigRepository.saveAll(List.of(constantConfigIN, constantConfigHLR));
     }

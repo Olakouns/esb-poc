@@ -33,11 +33,13 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-//        super.successfulAuth    entication(request, response, chain, authResult);
-
-//        Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
-        AuthenticationService.addToken(response, authResult.getName());
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+        Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
+        String role = "";
+        for (GrantedAuthority gAuth : authorities) {
+            role = gAuth.getAuthority();
+        }
+        AuthenticationService.addToken(response, authResult.getName(), role);
 
     }
 }

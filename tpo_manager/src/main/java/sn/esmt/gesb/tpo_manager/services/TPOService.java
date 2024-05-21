@@ -9,7 +9,7 @@ import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
 
 import java.util.List;
 
-public interface TPOService {
+public sealed interface TPOService permits TPOServiceImpl {
     TPODataDto getTPODataOfRequest(EsbRootActionRequest esbRootActionRequest);
 
     Workflow getMappingData(int tpoId, EsbRootActionRequest esbRootActionRequest);

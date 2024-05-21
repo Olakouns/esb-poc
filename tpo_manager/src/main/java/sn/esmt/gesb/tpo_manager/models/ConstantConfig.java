@@ -18,5 +18,6 @@ public class ConstantConfig {
     @Column(unique = true)
     private String keyName; // IN OR HLR
     private String valueContent;
+    private String wsdlDoc;
     private String description;
 }

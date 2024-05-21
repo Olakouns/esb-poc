@@ -1,12 +1,10 @@
 package sn.esmt.gesb.tpo_manager.security;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,15 +32,15 @@ public class SecurityConfiguration {
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user1 = User
-                .withUsername("user")
-                .password(passwordEncoder().encode("baeldung"))
-                .roles("tenant_1")
+                .withUsername("kounassolazare@gmail.com")
+                .password(passwordEncoder().encode("mot2P@ss"))
+                .roles("SUPER_ADMIN")
                 .build();
 
         UserDetails user2 = User
-                .withUsername("admin")
-                .password(passwordEncoder().encode("baeldung"))
-                .roles("tenant_2")
+                .withUsername("admin@admin.com")
+                .password(passwordEncoder().encode("mot2P@ss1234"))
+                .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user1, user2);
     }
@@ -59,14 +57,14 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/login").permitAll()
-                                .requestMatchers( new AntPathRequestMatcher("/api/tpo-manager"), new AntPathRequestMatcher("/api/tpo-manager/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/tpo-manager"), new AntPathRequestMatcher("/api/tpo-manager/**")).permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(securityContext -> securityContext.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new LoginFilter("/login", authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
-                .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .httpBasic(Customizer.withDefaults());
+                .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+//                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 

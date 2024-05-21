@@ -29,7 +29,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TPOServiceImpl implements TPOService {
+public non-sealed class TPOServiceImpl implements TPOService {
 
     private final TPODataRepository tpoDataRepository;
     private final ModelMapper modelMapper;
