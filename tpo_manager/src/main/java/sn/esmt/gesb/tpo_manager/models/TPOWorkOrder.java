@@ -32,6 +32,7 @@ public class TPOWorkOrder implements Serializable {
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tpo_work_failure_id")
     private List<TPOWorkOrder> tpoWorkOrderFailure = new ArrayList<>();
+    private boolean canBeDelete;
     @JsonIgnore
     @ManyToOne
     private ListNode listNode;

@@ -69,7 +69,13 @@ public class TpoAdminController {
         return tpoAdminService.addTpoWordOrder(tpoDataId, tpoWordOrder);
     }
 
-    @PostMapping("tpo-word-order")
+    @GetMapping("tpo-word-orders/page")
+    public Page<TPOWorkOrder> getWordOrders(@RequestParam(required = false, defaultValue = "") String search,
+                                     @RequestParam(required = false, defaultValue = "0") int page,
+                                     @RequestParam(required = false, defaultValue = "50") int size) {
+        return tpoAdminService.getWordOrders(search, page, size);
+    }
+    @GetMapping("tpo-word-order")
     public TPOWorkOrder addWordOrder(@RequestBody TPOWorkOrder tpoWordOrder) {
         return tpoAdminService.addWordOrder(tpoWordOrder);
     }

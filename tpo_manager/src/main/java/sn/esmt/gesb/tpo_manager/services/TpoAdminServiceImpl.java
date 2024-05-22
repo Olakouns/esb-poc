@@ -38,9 +38,11 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
 
     private Specification<TPOData> getSpecification(String search) {
-        Specification<TPOData> specification = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("tpo"), "%" + search + "%");
-        specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("verb"), "%" + search + "%"));
-        specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("condition"), "%" + search + "%"));
+//        specification = specification.or((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
+
+        Specification<TPOData> specification = (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("tpo")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%")));
+        specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("verb")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
+        specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("condition")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
         return specification;
     }
 
@@ -249,5 +251,16 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         }
         tpoWordOrderRepository.save(tpoWorkOrder);
         return new ApiResponse(true, "TPOWordOrder added successfully");
+    }
+
+    @Override
+    public Page<TPOWorkOrder> getWordOrders(String search, int page, int size) {
+        Specification<TPOWorkOrder> specification = (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("webServiceName")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%")));
+        specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("equipment")),  criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
+        Page<TPOWorkOrder> tpoWorkOrders = tpoWordOrderRepository.findAll(specification, PageRequest.of(page, size));
+        tpoWorkOrders.forEach(tpoWorkOrder -> {
+            // todo: check if work order is used by some tpo.
+        });
+        return tpoWorkOrders;
     }
 }

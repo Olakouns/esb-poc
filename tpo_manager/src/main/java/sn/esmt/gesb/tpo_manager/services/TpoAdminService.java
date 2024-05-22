@@ -52,4 +52,6 @@ public interface TpoAdminService {
     TPOWorkOrder addWordOrder(TPOWorkOrder tpoWordOrder);
 
     ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders);
+
+    Page<TPOWorkOrder> getWordOrders(String search, int page, int size);
 }
