@@ -1,24 +1,24 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-mysql-in
+  name: app-mysql-hlr
   labels:
-    app: db-app-in
+    app: db-app-hlr
 spec:
   ports:
     - port: 3307
       targetPort: 3307
   selector:
-    app: db-app-in
-    tier: mysql-in
+    app: db-app-hlr
+    tier: mysql-hlr
   clusterIP: None
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pvc-in
+  name: mysql-pvc-hlr
   labels:
-    app: db-app-in
+    app: db-app-hlr
 spec:
   accessModes:
     - ReadWriteOnce
@@ -29,25 +29,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-mysql-in
+  name: app-mysql-hlr
   labels:
-    app: db-app-in
+    app: db-app-hlr
 spec:
   selector:
     matchLabels:
-      app: db-app-in
-      tier: mysql-in
+      app: db-app-hlr
+      tier: mysql-hlr
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: db-app-in
-        tier: mysql-in
+        app: db-app-hlr
+        tier: mysql-hlr
     spec:
       containers:
         - image: mysql:latest
-          name: mysql-in
+          name: mysql-hlr
           env:
             - name: MYSQL_DATABASE
               valueFrom:
@@ -73,12 +73,12 @@ spec:
             tcpSocket:
               port: 3306
           ports:
-            - containerPort: 3307
-              name: mysql-in
+            - containerPort: 3308
+              name: mysql-hlr
           volumeMounts:
-            - name: mysql-persistent-storage-in
-              mountPath: /var/lib/mysql-in
+            - name: mysql-persistent-storage-hlr
+              mountPath: /var/lib/mysql-hlr
       volumes:
-        - name: mysql-persistent-storage-in
+        - name: mysql-persistent-storage-hlr
           persistentVolumeClaim:
-            claimName: mysql-pvc-in
+            claimName: mysql-pvc-hlr
