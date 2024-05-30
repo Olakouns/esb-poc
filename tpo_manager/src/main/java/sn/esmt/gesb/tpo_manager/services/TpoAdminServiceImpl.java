@@ -42,7 +42,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
         Specification<TPOData> specification = (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("tpo")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%")));
         specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("verb")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
-        specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("condition")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
+        specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("tpoCondition")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
         return specification;
     }
 
