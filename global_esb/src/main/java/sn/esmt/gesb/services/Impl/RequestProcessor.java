@@ -65,6 +65,7 @@ public class RequestProcessor {
         }
     }
 
+    // TODO : Make this part of code generic
     public EsbRootActionRequest getCurrentState(WorkflowStep workflowStep, EsbRootActionRequest esbRootActionRequestFromUser) throws Exception {
         String domResult = soapClientService.sendSoapRequestGettingString(workflowStep.getUrl(), workflowStep.getBodyContent());
         Object result = SoapResponseParser.parse(workflowStep.getWebServiceClassName(),domResult);
@@ -80,6 +81,7 @@ public class RequestProcessor {
         return esbRootActionRequestFromUser;
     }
 
+    // TODO:  Les deux fonctions suivantes sont a revoir !!
     private void formatUserSate1(SubscriberData subscriberData, EsbRootActionRequest esbRootActionRequestFromUser){
         EsbContent esbContent = currentStateComponent.getEsbParameters(subscriberData);
 //        VerbType verbType = esbRootActionRequestFromUser.getEsbContent().getVerb();
