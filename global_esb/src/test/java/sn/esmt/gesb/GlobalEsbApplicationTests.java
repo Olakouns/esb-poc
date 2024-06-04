@@ -263,11 +263,23 @@ class GlobalEsbApplicationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><ns2:displaySubscriberResponse xmlns:ns2=\"http://esmt.sn/hlr_api/soam\"><ns2:name>Razacki</ns2:name><ns2:phoneNumber>+221785900131</ns2:phoneNumber><ns2:imsi>10547544</ns2:imsi><ns2:subscriberType>PRE_PAID</ns2:subscriberType><ns2:services><ns2:service><ns2:serviceType>SERV_LTE</ns2:serviceType><ns2:targetNumber/><ns2:active>true</ns2:active></ns2:service><ns2:service><ns2:serviceType>SERV_ROAMING</ns2:serviceType><ns2:targetNumber/><ns2:active>true</ns2:active></ns2:service></ns2:services></ns2:displaySubscriberResponse>"})
+    @ValueSource(strings = {"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><ns2:displaySubscriberResponse xmlns:ns2=\"http://esmt.sn/hlr_api/soam\"><ns2:name>Razacki</ns2:name><ns2:phoneNumber>+221785900131</ns2:phoneNumber><ns2:imsi>10547544</ns2:imsi><ns2:subscriberType>PRE_PAID</ns2:subscriberType><ns2:services><ns2:service><ns2:serviceType>SERV_LTE</ns2:serviceType><ns2:targetNumber/><ns2:active>true</ns2:active></ns2:service><ns2:service><ns2:serviceType>SERV_ROAMING</ns2:serviceType><ns2:targetNumber/><ns2:active>true</ns2:active></ns2:service></ns2:services></ns2:displaySubscriberResponse>",
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><ns2:displaySubscriberResponse xmlns:ns2=\"http://esmt.sn/in_api/soam\"><ns2:subscriberName>Razacki</ns2:subscriberName><ns2:phoneNumber>+221785900131</ns2:phoneNumber><ns2:imsi>10547544</ns2:imsi><ns2:dataBalance>500.0</ns2:dataBalance><ns2:callBalance>500.0</ns2:callBalance><ns2:smsBalance>500.0</ns2:smsBalance></ns2:displaySubscriberResponse>"})
     public void testParserData(String xmlString) {
         XmlParser parser = new XmlParser();
         try {
-            parser.parseXml(xmlString);
+            EsbRootActionRequest esbRootActionRequest = parser.parseXml(xmlString, "displaySubscriberResponse");
+
+            esbRootActionRequest.getEsbContent().getEsbParameter().forEach(esbParameter -> {
+                System.err.println(esbParameter.getName() + " : " + esbParameter.getOldValue());
+            });
+
+            esbRootActionRequest.getEsbContent().getEsbServices().getEsbService().forEach(esbService -> {
+                System.err.println("SERVICE PART ---------------- ");
+                esbService.getEsbParameter().forEach(esbParameter -> {
+                    System.err.println(esbParameter.getName() + " : " + esbParameter.getOldValue());
+                });
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -101,6 +101,7 @@ public non-sealed class TPOServiceImpl implements TPOService {
     private WorkflowStep builderStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
         WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters);
         workflowStep.setWebServiceClassName(pattern.getWebServiceClassName());
+        // TODO: to be review
         if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
             for (TPOWorkOrder tpoWorkOrderFailure : pattern.getLinkedList()) {
                 WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbParameters);
