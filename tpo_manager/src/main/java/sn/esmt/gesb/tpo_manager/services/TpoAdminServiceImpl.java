@@ -8,15 +8,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import sn.esmt.gesb.dto.ApiResponse;
+import sn.esmt.gesb.tpo_manager.exceptions.BadRequestException;
 import sn.esmt.gesb.tpo_manager.exceptions.RequestNotAcceptableException;
 import sn.esmt.gesb.tpo_manager.exceptions.ResourceNotFoundException;
 import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
+import sn.esmt.gesb.tpo_manager.models.TpoFailureState;
 import sn.esmt.gesb.tpo_manager.models.chain.ListNode;
 import sn.esmt.gesb.tpo_manager.repositories.ConstantConfigRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPOWordOrderRepository;
+import sn.esmt.gesb.tpo_manager.repositories.TpoFailureStateRepository;
 import sn.esmt.gesb.tpo_manager.services.chain.ListNodeService;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     private final ListNodeService listNodeService;
     private final EntityManager entityManager;
     private final ConstantConfigRepository constantConfigRepository;
+    private final TpoFailureStateRepository tpoFailureStateRepository;
 
 
     private Specification<TPOData> getSpecification(String search) {
@@ -169,13 +173,13 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         return new ApiResponse(true, "TPOWordOrder deleted successfully");
     }
 
-    @Override
-    public TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder) {
-        TPOWorkOrder tpoWordOrderDB = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
-        tpoWordOrder = tpoWordOrderRepository.save(tpoWordOrder);
-        tpoWordOrderDB.getTpoWorkOrderFailure().add(tpoWordOrder);
-        return tpoWordOrder;
-    }
+//    @Override
+//    public TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder) {
+//        TPOWorkOrder tpoWordOrderDB = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
+//        tpoWordOrder = tpoWordOrderRepository.save(tpoWordOrder);
+//        tpoWordOrderDB.getTpoWorkOrderFailure().add(tpoWordOrder);
+//        return tpoWordOrder;
+//    }
 
     @Override
     public ApiResponse updateTpoDataPatterns(int id, LinkedList<TPOWorkOrder> tpoWorkOrders) {
@@ -240,23 +244,42 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     }
 
     @Override
-    public ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders) {
-        TPOWorkOrder tpoWorkOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWorkOrder", "id", tpoWordOrderId));
-        tpoWorkOrder.setTpoWorkOrderFailure(tpoWordOrders);
-        tpoWordOrderRepository.save(tpoWorkOrder);
-        if (!tpoWordOrders.isEmpty()) {
-            tpoWorkOrder.setListNode(listNodeService.createListNode(new LinkedList<>(tpoWorkOrder.getTpoWorkOrderFailure())));
-        } else {
-            tpoWorkOrder.setListNode(null);
+    public ApiResponse addTpoForWOFailureTo(int tpoWordOrderId, int tpoDataId,  int tpoFailureId) {
+        TPOWorkOrder tpoWordOrder = tpoWordOrderRepository.findById(tpoWordOrderId)
+                .orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
+        TPOData tpoData = tpoDataRepository.findById(tpoDataId)
+                .orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
+
+        if (tpoFailureStateRepository.existsByTpoIdAndWoId(tpoDataId, tpoWordOrderId)){
+            throw new BadRequestException("Tpo already associate to word order");
         }
-        tpoWordOrderRepository.save(tpoWorkOrder);
-        return new ApiResponse(true, "TPOWordOrder added successfully");
+
+        TpoFailureState tpoFailureState = new TpoFailureState();
+        tpoFailureState.setTpoId(tpoDataId);
+        tpoFailureState.setWoId(tpoWordOrderId);
+        tpoFailureState.setTpoFailureId(tpoFailureId);
+        tpoFailureStateRepository.save(tpoFailureState);
+        return new ApiResponse(true, "Failure step add successfully");
     }
+
+//    @Override
+//    public ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders) {
+//        TPOWorkOrder tpoWorkOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWorkOrder", "id", tpoWordOrderId));
+//        tpoWorkOrder.setTpoWorkOrderFailure(tpoWordOrders);
+//        tpoWordOrderRepository.save(tpoWorkOrder);
+//        if (!tpoWordOrders.isEmpty()) {
+//            tpoWorkOrder.setListNode(listNodeService.createListNode(new LinkedList<>(tpoWorkOrder.getTpoWorkOrderFailure())));
+//        } else {
+//            tpoWorkOrder.setListNode(null);
+//        }
+//        tpoWordOrderRepository.save(tpoWorkOrder);
+//        return new ApiResponse(true, "TPOWordOrder added successfully");
+//    }
 
     @Override
     public Page<TPOWorkOrder> getWordOrders(String search, int page, int size) {
         Specification<TPOWorkOrder> specification = (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("webServiceName")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%")));
-        specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("equipment")),  criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
+        specification = specification.or((root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("equipment")), criteriaBuilder.lower(criteriaBuilder.literal("%" + search + "%"))));
         Page<TPOWorkOrder> tpoWorkOrders = tpoWordOrderRepository.findAll(specification, PageRequest.of(page, size));
         tpoWorkOrders.forEach(tpoWorkOrder -> {
             // todo: check if work order is used by some tpo.

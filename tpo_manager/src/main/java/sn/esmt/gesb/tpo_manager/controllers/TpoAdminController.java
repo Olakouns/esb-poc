@@ -111,16 +111,16 @@ public class TpoAdminController {
         return tpoAdminService.deleteTpoWordOrder(tpoWordOrderId);
     }
 
-    @Deprecated
-    @PutMapping("/tpo-word-order/{tpoWordOrderId}/failure")
-    public TPOWorkOrder addTpoWordOrderFailureToWK(@PathVariable int tpoWordOrderId, @RequestBody TPOWorkOrder tpoWordOrder) {
-        return tpoAdminService.addTpoWordOrderFailureToWK(tpoWordOrderId, tpoWordOrder);
-    }
+//    @Deprecated
+//    @PutMapping("/tpo-word-order/{tpoWordOrderId}/failure")
+//    public TPOWorkOrder addTpoWordOrderFailureToWK(@PathVariable int tpoWordOrderId, @RequestBody TPOWorkOrder tpoWordOrder) {
+//        return tpoAdminService.addTpoWordOrderFailureToWK(tpoWordOrderId, tpoWordOrder);
+//    }
 
-    @PutMapping("/tpo-word-order/{tpoWordOrderId}/failures")
+   /* @PutMapping("/tpo-word-order/{tpoWordOrderId}/failures")
     public ApiResponse addTpoWordOrderFailureToWK(@PathVariable int tpoWordOrderId, @RequestBody List<TPOWorkOrder> tpoWordOrders) {
         return tpoAdminService.addTpoWordOrdersFailureToWK(tpoWordOrderId, tpoWordOrders);
-    }
+    }*/
 
 
     @GetMapping("/constant-config")

@@ -19,8 +19,10 @@ import sn.esmt.gesb.tpo_manager.exceptions.RequestNotAcceptableException;
 import sn.esmt.gesb.tpo_manager.exceptions.ResourceNotFoundException;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
+import sn.esmt.gesb.tpo_manager.models.TpoFailureState;
 import sn.esmt.gesb.tpo_manager.repositories.ConstantConfigRepository;
 import sn.esmt.gesb.tpo_manager.repositories.TPODataRepository;
+import sn.esmt.gesb.tpo_manager.repositories.TpoFailureStateRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,6 +37,7 @@ public non-sealed class TPOServiceImpl implements TPOService {
     private final ModelMapper modelMapper;
     private final MappingBuilder mappingBuilder;
     private final ConstantConfigRepository configurationRepository;
+    private final TpoFailureStateRepository tpoFailureStateRepository;
 
     @Override
     public TPODataDto getTPODataOfRequest(EsbRootActionRequest esbRootActionRequest) {
@@ -43,7 +46,7 @@ public non-sealed class TPOServiceImpl implements TPOService {
         Optional<EsbParameter> esbParameterOptional = esbRootActionRequest.getEsbContent().getEsbParameter().stream().filter(esbParameter -> esbParameter.getName().equals("subscriberType")).findFirst();
         if (esbParameterOptional.isPresent()) {
             condition = esbParameterOptional.get().getName();
-        }else {
+        } else {
             log.error("subscriberType not present");
         }
 
@@ -60,7 +63,7 @@ public non-sealed class TPOServiceImpl implements TPOService {
         Workflow workflow = new Workflow();
         try {
             for (TPOWorkOrder pattern : tpoData.getLinkedList()) {
-                if(pattern.isServiceTemplate()){
+                if (pattern.isServiceTemplate()) {
                     if (esbRootActionRequest.getEsbContent().getEsbServices() == null || esbRootActionRequest.getEsbContent().getEsbServices().getEsbService().isEmpty()) {
                         throw new BadRequestException("There are no service nodes or esbservice is null");
                     }
@@ -68,10 +71,10 @@ public non-sealed class TPOServiceImpl implements TPOService {
                         // todo : check here otherwise clone object
                         List<EsbParameter> esbParameters = new java.util.ArrayList<>(List.copyOf(esbRootActionRequest.getEsbContent().getEsbParameter()));
                         esbParameters.addAll(esbService.getEsbParameter());
-                        workflow.getWorkflowSteps().add(builderStep(pattern, esbParameters));
+                        workflow.getWorkflowSteps().add(builderStep(tpoId, pattern, esbParameters));
                     }
                 } else {
-                    workflow.getWorkflowSteps().add(builderStep(pattern,  esbRootActionRequest.getEsbContent().getEsbParameter()));
+                    workflow.getWorkflowSteps().add(builderStep(tpoId, pattern, esbRootActionRequest.getEsbContent().getEsbParameter()));
                 }
             }
         } catch (IOException | JDOMException e) {
@@ -84,13 +87,13 @@ public non-sealed class TPOServiceImpl implements TPOService {
     @Override
     public Workflow getMappingDataCritical(int tpoId, EsbRootActionRequest esbRootActionRequest) {
         TPOData tpoData = tpoDataRepository.findById(tpoId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoId));
-        if (!tpoData.isCritical()){
+        if (!tpoData.isCritical()) {
             throw new BadRequestException("GetMappingDataCritical - TPOData id : " + tpoId);
         }
         try {
             Workflow workflow = new Workflow();
             for (TPOWorkOrder previousStatesDatum : tpoData.getPreviousStatesData()) {
-                workflow.getWorkflowSteps().add(builderStep(previousStatesDatum, esbRootActionRequest.getEsbContent().getEsbParameter()));
+                workflow.getWorkflowSteps().add(builderStep(tpoId, previousStatesDatum, esbRootActionRequest.getEsbContent().getEsbParameter()));
             }
             return workflow;
         } catch (IOException | JDOMException e) {
@@ -98,13 +101,15 @@ public non-sealed class TPOServiceImpl implements TPOService {
         }
     }
 
-    private WorkflowStep builderStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
+    private WorkflowStep builderStep(int tpoId, TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
         WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters);
         workflowStep.setWebServiceClassName(pattern.getWebServiceClassName());
         // TODO: to be review
-        if (!pattern.getTpoWorkOrderFailure().isEmpty()) {
-            for (TPOWorkOrder tpoWorkOrderFailure : pattern.getLinkedList()) {
-                WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrderFailure, esbParameters);
+        Optional<TpoFailureState> tpoFailureState = tpoFailureStateRepository.findByTpoIdAndWoId(tpoId, pattern.getId());
+        if (tpoFailureState.isEmpty()) {
+            TPOData tpoData = tpoDataRepository.findById(tpoFailureState.get().getTpoFailureId()).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoId));
+            for (TPOWorkOrder tpoWorkOrder : tpoData.getLinkedList()) {
+                WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrder, esbParameters);
                 workflowStep.getFailureSteps().add(workflowStepFailure);
             }
         }

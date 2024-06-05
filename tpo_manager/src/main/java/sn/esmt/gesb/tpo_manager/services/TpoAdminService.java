@@ -35,7 +35,7 @@ public interface TpoAdminService {
 
     ApiResponse deleteTpoWordOrder(int tpoWordOrderId);
 
-    TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
+//    TPOWorkOrder addTpoWordOrderFailureToWK(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
 
     ApiResponse updateTpoDataPatterns(int id, LinkedList<TPOWorkOrder> tpoData);
 
@@ -51,7 +51,8 @@ public interface TpoAdminService {
 
     TPOWorkOrder addWordOrder(TPOWorkOrder tpoWordOrder);
 
-    ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders);
+    ApiResponse addTpoForWOFailureTo(int tpoWordOrderId, int tpoDataId, int tpoFailureId);
+//    ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders);
 
     Page<TPOWorkOrder> getWordOrders(String search, int page, int size);
 }

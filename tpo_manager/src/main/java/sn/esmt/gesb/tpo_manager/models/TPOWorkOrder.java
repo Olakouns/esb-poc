@@ -29,26 +29,26 @@ public class TPOWorkOrder implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String template;
     private String equipment;
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "tpo_work_failure_id")
-    private List<TPOWorkOrder> tpoWorkOrderFailure = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.PERSIST)
+//    @JoinColumn(name = "tpo_work_failure_id")
+//    private List<TPOWorkOrder> tpoWorkOrderFailure = new ArrayList<>();
     private boolean canBeDelete;
-    @JsonIgnore
-    @ManyToOne
-    private ListNode listNode;
-    @Transient
-    private List<TPOWorkOrder> linkedList;
-    public List<TPOWorkOrder> getLinkedList() {
-        LinkedList<TPOWorkOrder> patternsLink = new LinkedList<>();
-        ListNode current = listNode;
-        if (current == null) {
-            return tpoWorkOrderFailure;
-        }
-        do {
-            ListNode finalCurrent = current;
-            patternsLink.add(tpoWorkOrderFailure.stream().filter(p -> p.getId() == finalCurrent.getDataId()).findFirst().orElse(null));
-            current = current.getNextNode();
-        } while (current != null);
-        return patternsLink;
-    }
+//    @JsonIgnore
+//    @ManyToOne
+//    private ListNode listNode;
+//    @Transient
+//    private List<TPOWorkOrder> linkedList;
+//    public List<TPOWorkOrder> getLinkedList() {
+//        LinkedList<TPOWorkOrder> patternsLink = new LinkedList<>();
+//        ListNode current = listNode;
+//        if (current == null) {
+//            return tpoWorkOrderFailure;
+//        }
+//        do {
+//            ListNode finalCurrent = current;
+//            patternsLink.add(tpoWorkOrderFailure.stream().filter(p -> p.getId() == finalCurrent.getDataId()).findFirst().orElse(null));
+//            current = current.getNextNode();
+//        } while (current != null);
+//        return patternsLink;
+//    }
 }
