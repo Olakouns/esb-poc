@@ -33,6 +33,8 @@ public class TPOWorkOrder implements Serializable {
 //    @JoinColumn(name = "tpo_work_failure_id")
 //    private List<TPOWorkOrder> tpoWorkOrderFailure = new ArrayList<>();
     private boolean canBeDelete;
+    @Transient
+    private TpoFailureState tpoFailureState;
 //    @JsonIgnore
 //    @ManyToOne
 //    private ListNode listNode;

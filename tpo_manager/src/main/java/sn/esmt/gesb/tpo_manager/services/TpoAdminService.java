@@ -5,6 +5,7 @@ import sn.esmt.gesb.dto.ApiResponse;
 import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
+import sn.esmt.gesb.tpo_manager.models.TpoFailureState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,8 @@ public interface TpoAdminService {
     TPOWorkOrder addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder);
     ApiResponse addManyTpoWordOrder(int tpoDataId, List<TPOWorkOrder> tpoWordOrders);
     ApiResponse addTpoWordOrderById(int tpoDataId, int tpoWordOrderId);
+
+
     ApiResponse removeTpoWordOrder(int tpoDataId, int tpoWordOrderId);
 
     TPOWorkOrder updateTpoWordOrder(int tpoWordOrderId, TPOWorkOrder tpoWordOrder);
@@ -51,8 +54,13 @@ public interface TpoAdminService {
 
     TPOWorkOrder addWordOrder(TPOWorkOrder tpoWordOrder);
 
-    ApiResponse addTpoForWOFailureTo(int tpoWordOrderId, int tpoDataId, int tpoFailureId);
+    TpoFailureState addTpoForWOFailureTo(int tpoWordOrderId, int tpoDataId, int tpoFailureId);
+
+    TpoFailureState updateFailureTpo(int tpoFailureStateId, int woId, int tpoDataId, int tpoFailureId);
+    ApiResponse deleteFailureTpo(int tpoFailureStateId, int tpoDataId);
+
 //    ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders);
 
     Page<TPOWorkOrder> getWordOrders(String search, int page, int size);
+
 }

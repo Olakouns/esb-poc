@@ -9,6 +9,7 @@ import sn.esmt.gesb.dto.ApiResponse;
 import sn.esmt.gesb.tpo_manager.models.ConstantConfig;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 import sn.esmt.gesb.tpo_manager.models.TPOWorkOrder;
+import sn.esmt.gesb.tpo_manager.models.TpoFailureState;
 import sn.esmt.gesb.tpo_manager.services.TpoAdminService;
 
 import java.util.LinkedList;
@@ -71,10 +72,11 @@ public class TpoAdminController {
 
     @GetMapping("tpo-word-orders/page")
     public Page<TPOWorkOrder> getWordOrders(@RequestParam(required = false, defaultValue = "") String search,
-                                     @RequestParam(required = false, defaultValue = "0") int page,
-                                     @RequestParam(required = false, defaultValue = "50") int size) {
+                                            @RequestParam(required = false, defaultValue = "0") int page,
+                                            @RequestParam(required = false, defaultValue = "50") int size) {
         return tpoAdminService.getWordOrders(search, page, size);
     }
+
     @GetMapping("tpo-word-order")
     public TPOWorkOrder addWordOrder(@RequestBody TPOWorkOrder tpoWordOrder) {
         return tpoAdminService.addWordOrder(tpoWordOrder);
@@ -88,6 +90,24 @@ public class TpoAdminController {
     @PutMapping("/tpo-data/{tpoDataId}/tpo-word-order/{tpoWordOrderId}")
     public ApiResponse addTpoWordOrderById(@PathVariable int tpoDataId, @PathVariable int tpoWordOrderId) {
         return tpoAdminService.addTpoWordOrderById(tpoDataId, tpoWordOrderId);
+    }
+
+    @PutMapping("/tpo-data/{tpoDataId}/failure")
+    public TpoFailureState addFailureTpo(@PathVariable int tpoDataId, @RequestBody TpoFailureState tpoFailureState) {
+        return tpoAdminService.addTpoForWOFailureTo(tpoFailureState.getWoId(), tpoDataId, tpoFailureState.getTpoFailureId());
+    }
+
+    @PutMapping("/tpo-data/{tpoDataId}/failure/{tpoFailureStateId}")
+    public TpoFailureState updateFailureTpo(@PathVariable int tpoDataId,
+                                        @PathVariable int tpoFailureStateId,
+                                        @RequestBody TpoFailureState tpoFailureState) {
+        return tpoAdminService.updateFailureTpo(tpoFailureStateId, tpoFailureState.getWoId(), tpoDataId, tpoFailureState.getTpoFailureId());
+    }
+
+    @DeleteMapping("/tpo-data/{tpoDataId}/failure/{tpoFailureStateId}")
+    public ApiResponse deleteFailureTpo(@PathVariable int tpoDataId,
+                                        @PathVariable int tpoFailureStateId) {
+        return tpoAdminService.deleteFailureTpo(tpoFailureStateId, tpoDataId);
     }
 
 
@@ -110,6 +130,7 @@ public class TpoAdminController {
     public ApiResponse deleteTpoWordOrder(@PathVariable int tpoWordOrderId) {
         return tpoAdminService.deleteTpoWordOrder(tpoWordOrderId);
     }
+
 
 //    @Deprecated
 //    @PutMapping("/tpo-word-order/{tpoWordOrderId}/failure")

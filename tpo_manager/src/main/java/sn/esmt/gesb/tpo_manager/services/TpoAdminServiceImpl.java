@@ -94,7 +94,13 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
     @Override
     public List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId) {
-        return tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId)).getLinkedList();
+        List<TPOWorkOrder> tpoWorkOrders =  tpoDataRepository.findById(tpoDataId)
+                .orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId)).getLinkedList();
+        tpoWorkOrders.forEach(tpoWorkOrder -> tpoFailureStateRepository
+                .findByTpoIdAndWoId(tpoDataId, tpoWorkOrder.getId())
+                .ifPresent(tpoWorkOrder::setTpoFailureState));
+        return tpoWorkOrders;
+
     }
 
     @Override
@@ -244,14 +250,18 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     }
 
     @Override
-    public ApiResponse addTpoForWOFailureTo(int tpoWordOrderId, int tpoDataId,  int tpoFailureId) {
+    public TpoFailureState addTpoForWOFailureTo(int tpoWordOrderId, int tpoDataId, int tpoFailureId) {
         TPOWorkOrder tpoWordOrder = tpoWordOrderRepository.findById(tpoWordOrderId)
                 .orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
         TPOData tpoData = tpoDataRepository.findById(tpoDataId)
                 .orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
 
-        if (tpoFailureStateRepository.existsByTpoIdAndWoId(tpoDataId, tpoWordOrderId)){
+        if (tpoFailureStateRepository.existsByTpoIdAndWoId(tpoDataId, tpoWordOrderId)) {
             throw new BadRequestException("Tpo already associate to word order");
+        }
+
+        if (!tpoDataRepository.existsById(tpoFailureId)){
+            throw  new ResourceNotFoundException("TPOData", "id", tpoFailureId);
         }
 
         TpoFailureState tpoFailureState = new TpoFailureState();
@@ -259,10 +269,26 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         tpoFailureState.setWoId(tpoWordOrderId);
         tpoFailureState.setTpoFailureId(tpoFailureId);
         tpoFailureStateRepository.save(tpoFailureState);
-        return new ApiResponse(true, "Failure step add successfully");
+        return tpoFailureState;
     }
 
-//    @Override
+    @Override
+    public TpoFailureState updateFailureTpo(int tpoFailureStateId, int woId, int tpoDataId, int tpoFailureId) {
+        TpoFailureState tpoFailureState = tpoFailureStateRepository.findById(tpoFailureStateId)
+                .orElseThrow(() -> new ResourceNotFoundException("TpoFailureState", "id", tpoFailureStateId));
+        tpoFailureState.setTpoFailureId(tpoFailureId);
+        return tpoFailureStateRepository.save(tpoFailureState);
+    }
+
+    @Override
+    public ApiResponse deleteFailureTpo(int tpoFailureStateId, int tpoDataId) {
+        TpoFailureState tpoFailureState = tpoFailureStateRepository.findById(tpoFailureStateId)
+                .orElseThrow(() -> new ResourceNotFoundException("TpoFailureState", "id", tpoFailureStateId));
+        tpoFailureStateRepository.deleteById(tpoFailureStateId);
+        return new ApiResponse(true, "Failure state deleted successfully");
+    }
+
+    //    @Override
 //    public ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders) {
 //        TPOWorkOrder tpoWorkOrder = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWorkOrder", "id", tpoWordOrderId));
 //        tpoWorkOrder.setTpoWorkOrderFailure(tpoWordOrders);
