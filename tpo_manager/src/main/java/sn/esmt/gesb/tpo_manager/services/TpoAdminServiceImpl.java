@@ -168,6 +168,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         TPOWorkOrder tpoWordOrderDB = tpoWordOrderRepository.findById(tpoWordOrderId).orElseThrow(() -> new ResourceNotFoundException("TPOWordOrder", "id", tpoWordOrderId));
         tpoWordOrderDB.setEquipment(tpoWordOrder.getEquipment());
         tpoWordOrderDB.setTemplate(tpoWordOrder.getTemplate());
+        tpoWordOrderDB.setServiceTemplate(tpoWordOrder.isServiceTemplate());
         tpoWordOrderDB.setWebServiceName(tpoWordOrder.getWebServiceName());
         return tpoWordOrderRepository.save(tpoWordOrderDB);
     }

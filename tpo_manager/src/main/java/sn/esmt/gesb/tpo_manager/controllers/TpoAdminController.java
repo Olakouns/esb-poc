@@ -77,7 +77,7 @@ public class TpoAdminController {
         return tpoAdminService.getWordOrders(search, page, size);
     }
 
-    @GetMapping("tpo-word-order")
+    @PostMapping("tpo-word-order")
     public TPOWorkOrder addWordOrder(@RequestBody TPOWorkOrder tpoWordOrder) {
         return tpoAdminService.addWordOrder(tpoWordOrder);
     }
