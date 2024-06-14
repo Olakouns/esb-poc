@@ -2,27 +2,20 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://esmt.sn/hlr_api/soam" xmlns:tns="http://esmt.sn/hlr_api/soam"
            elementFormDefault="qualified">
-
     <xs:element name="activateSubscriberRequest" type="tns:SubscriberData"/>
-
     <xs:element name="activateSubscriberResponse" type="tns:ApiResponse"/>
-
     <xs:element name="deactivateSubscriberRequest">
         <xs:complexType>
             <xs:attribute name="phoneNumber" use="required"/>
         </xs:complexType>
     </xs:element>
-
     <xs:element name="deactivateSubscriberResponse" type="tns:ApiResponse"/>
-
     <xs:element name="displaySubscriberRequest">
         <xs:complexType>
             <xs:attribute name="phoneNumber" use="required"/>
         </xs:complexType>
     </xs:element>
-
     <xs:element name="displaySubscriberResponse" type="tns:SubscriberData"/>
-
     <xs:element name="modifyServiceSubscriberRequest">
         <xs:complexType>
             <xs:sequence>
@@ -32,10 +25,7 @@
             <xs:attribute name="verb" type="tns:VerbType" use="required"/>
         </xs:complexType>
     </xs:element>
-
     <xs:element name="modifyServiceSubscriberResponse" type="tns:ApiResponse"/>
-
-
     <xs:complexType name="SubscriberData">
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
@@ -45,13 +35,11 @@
             <xs:element name="services" type="tns:Services" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
-
     <xs:complexType name="Services">
         <xs:sequence>
             <xs:element name="service" type="tns:Service" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-
     <xs:complexType name="Service">
         <xs:sequence>
             <xs:element name="serviceType" type="tns:ServiceType"/>
@@ -59,21 +47,18 @@
             <xs:element name="active" type="xs:boolean"/>
         </xs:sequence>
     </xs:complexType>
-
     <xs:complexType name="ApiResponse">
         <xs:sequence>
             <xs:element name="success" type="xs:boolean"/>
             <xs:element name="message" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-
     <xs:simpleType name="SubscriberType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="PRE_PAID"/>
             <xs:enumeration value="POST_PAID"/>
         </xs:restriction>
     </xs:simpleType>
-
     <xs:simpleType name="ServiceType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="SERV_VOLTE"/>
@@ -87,7 +72,6 @@
             <xs:enumeration value="SERV_CRBT"/>
         </xs:restriction>
     </xs:simpleType>
-
     <xs:simpleType name="VerbType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="ADD"/>
