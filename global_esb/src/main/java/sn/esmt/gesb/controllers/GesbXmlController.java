@@ -24,7 +24,6 @@ public class GesbXmlController {
 
     private final QueueManagerComponent queueManagerComponent;
 
-
     @PostMapping(consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<EsbRootActionResponse> processRequest(@RequestHeader(value = "callback_url", required = false) String callbackURL, @RequestBody EsbRootActionRequest esbRootActionRequest) {
         EsbRootActionResponse response = new EsbRootActionResponse();

@@ -57,6 +57,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/login").permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/swagger-config"), new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v3/api-docs"))
+                                .permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/tpo-manager"), new AntPathRequestMatcher("/api/tpo-manager/**")).permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(securityContext -> securityContext.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
