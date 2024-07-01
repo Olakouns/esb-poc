@@ -29,8 +29,8 @@ public interface TpoAdminService {
 
     TPOWorkOrder addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder);
     ApiResponse addManyTpoWordOrder(int tpoDataId, List<TPOWorkOrder> tpoWordOrders);
+    ApiResponse addTpoPreviousState(int tpoDataId, List<TPOWorkOrder> tpoWordOrders);
     ApiResponse addTpoWordOrderById(int tpoDataId, int tpoWordOrderId);
-
 
     ApiResponse removeTpoWordOrder(int tpoDataId, int tpoWordOrderId);
 

@@ -46,11 +46,20 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
                 } else {
                     log.error(workflowStep.getUrl() + " " + exception.getMessage());
                 }
-                this.rollback(workflowSteps, workflowSteps.indexOf(workflowStep), callbackURL);
+                this.rollback(workflowStep.getFailureSteps(), callbackURL);
+//                this.rollback(workflowSteps, workflowSteps.indexOf(workflowStep), callbackURL);
                 break;
             }
         }
         log.info("End request {} treatment  at {}", requestId, new Date().getTime());
+    }
+
+    private void rollback(List<WorkflowStep> workflowStep, String callbackURL) {
+        if (workflowStep.isEmpty()) return;
+        for (WorkflowStep action : workflowStep) {
+            requestRetry.executeFailure(action);
+        }
+        // TODO: 2/16/2024 send callback
     }
 
     private void rollback(List<WorkflowStep> workflowSteps, int index, String callbackURL) {

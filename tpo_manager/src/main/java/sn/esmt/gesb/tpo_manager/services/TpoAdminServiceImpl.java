@@ -81,7 +81,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
     public TPOData getTpoDataById(int id) {
         TPOData tpoData = tpoDataRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", id));
         tpoData.setPatterns(new LinkedList<>());
-        tpoData.setPreviousStatesData(new LinkedList<>());
+//        tpoData.setPreviousStatesData(new LinkedList<>());
         return tpoData;
     }
 
@@ -137,6 +137,14 @@ public class TpoAdminServiceImpl implements TpoAdminService {
         tpoData.setListNode(listNodeService.createListNode(new LinkedList<>(tpoData.getPatterns())));
         tpoDataRepository.save(tpoData);
         return new ApiResponse(true, "TPOWordOrder added successfully");
+    }
+
+    @Override
+    public ApiResponse addTpoPreviousState(int tpoDataId, List<TPOWorkOrder> tpoWordOrders) {
+        TPOData tpoData = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
+        tpoData.setPreviousStatesData(tpoWordOrders);
+        tpoDataRepository.save(tpoData);
+        return new ApiResponse(true, "TPOWordOrder for previous state added successfully");
     }
 
     @Override

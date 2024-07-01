@@ -106,7 +106,7 @@ public non-sealed class TPOServiceImpl implements TPOService {
         workflowStep.setWebServiceClassName(pattern.getWebServiceClassName());
         // TODO: to be review
         Optional<TpoFailureState> tpoFailureState = tpoFailureStateRepository.findByTpoIdAndWoId(tpoId, pattern.getId());
-        if (tpoFailureState.isEmpty()) {
+        if (tpoFailureState.isPresent()) {
             TPOData tpoData = tpoDataRepository.findById(tpoFailureState.get().getTpoFailureId()).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoId));
             for (TPOWorkOrder tpoWorkOrder : tpoData.getLinkedList()) {
                 WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrder, esbParameters);

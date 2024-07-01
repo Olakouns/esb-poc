@@ -88,6 +88,11 @@ public class TpoAdminController {
         return tpoAdminService.addManyTpoWordOrder(tpoDataId, tpoWordOrders);
     }
 
+    @PutMapping("/tpo-data/{tpoDataId}/previous-state")
+    public ApiResponse addTpoPreviousState(@PathVariable int tpoDataId, @RequestBody List<TPOWorkOrder> tpoWordOrders) {
+        return tpoAdminService.addTpoPreviousState(tpoDataId, tpoWordOrders);
+    }
+
     @PutMapping("/tpo-data/{tpoDataId}/tpo-word-order/{tpoWordOrderId}")
     public ApiResponse addTpoWordOrderById(@PathVariable int tpoDataId, @PathVariable int tpoWordOrderId) {
         return tpoAdminService.addTpoWordOrderById(tpoDataId, tpoWordOrderId);
