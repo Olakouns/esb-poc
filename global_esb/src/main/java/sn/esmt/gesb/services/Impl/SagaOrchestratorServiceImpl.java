@@ -12,6 +12,7 @@ import org.springframework.ws.soap.SoapFaultException;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import sn.esmt.gesb.dto.WorkflowStep;
 import sn.esmt.gesb.services.SagaOrchestratorService;
+import sn.esmt.gesb.soam.EsbRootActionResponse;
 
 import java.util.Collections;
 import java.util.Date;
@@ -27,12 +28,17 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
     private final RequestRetryForFailure requestRetry;
 
     @Override
-    public void executeSaga(List<WorkflowStep> workflowSteps, String callbackURL, String requestId) {
+    public EsbRootActionResponse executeSaga(List<WorkflowStep> workflowSteps, String callbackURL, String requestId) {
+        EsbRootActionResponse esbRootActionResponse = new EsbRootActionResponse();
         for (WorkflowStep workflowStep : workflowSteps) {
             try {
                 // todo : send request here
                 soapClientService.sendSoapRequest(workflowStep.getUrl(), workflowStep.getBodyContent());
+                esbRootActionResponse.setSuccess(true);
+                esbRootActionResponse.setMessage("operation successfully completed");
             } catch (Exception exception) {
+                esbRootActionResponse.setSuccess(false);
+                esbRootActionResponse.setMessage(exception.getMessage());
                 if (exception instanceof SoapFaultClientException soapFaultException) {
                     // todo : show message correctly here
                     /*
@@ -47,36 +53,47 @@ public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
                     log.error(workflowStep.getUrl() + " " + exception.getMessage());
                 }
                 this.rollback(workflowStep.getFailureSteps(), callbackURL);
-//                this.rollback(workflowSteps, workflowSteps.indexOf(workflowStep), callbackURL);
                 break;
             }
         }
         log.info("End request {} treatment  at {}", requestId, new Date().getTime());
+        return esbRootActionResponse;
     }
 
-    private void rollback(List<WorkflowStep> workflowStep, String callbackURL) {
-        if (workflowStep.isEmpty()) return;
-        for (WorkflowStep action : workflowStep) {
+    private void rollback(List<WorkflowStep> workflowSteps, String callbackURL) {
+        for (WorkflowStep action : workflowSteps) {
             requestRetry.executeFailure(action);
         }
-        // TODO: 2/16/2024 send callback
     }
 
-    private void rollback(List<WorkflowStep> workflowSteps, int index, String callbackURL) {
-        if (index == -1) throw new RuntimeException("No rollback action found");
-        if (index == 0) {
-            log.error("Nothing to rollback");
-        }
-        List<WorkflowStep> actions = new LinkedList<>();
-        for (int i = index - 1; i >= 0; i--) {
-            if (workflowSteps.get(i).getFailureSteps() == null) continue;
-            // Collections.reverse(workflowSteps.get(i).getFailureSteps());
-            actions.addAll(workflowSteps.get(i).getFailureSteps());
-        }
+//    private void rollback(List<WorkflowStep> workflowSteps, int index, String callbackURL) {
+//        if (index == -1) throw new RuntimeException("No rollback action found");
+//        if (index == 0) {
+//            log.error("Nothing to rollback");
+//            return;
+//        }
+//
+//        if (workflowSteps.get(index -1).getFailureSteps().isEmpty()) return;
+//        for (WorkflowStep action : workflowSteps.get(index -1).getFailureSteps()) {
+//            requestRetry.executeFailure(action);
+//        }
+//    }
 
-        for (WorkflowStep action : actions) {
-            requestRetry.executeFailure(action);
-        }
-        // TODO: 2/16/2024 send callback
-    }
+//    private void rollback(List<WorkflowStep> workflowSteps, int index, String callbackURL) {
+//        if (index == -1) throw new RuntimeException("No rollback action found");
+//        if (index == 0) {
+//            log.error("Nothing to rollback");
+//        }
+//        List<WorkflowStep> actions = new LinkedList<>();
+//        for (int i = index - 1; i >= 0; i--) {
+//            if (workflowSteps.get(i).getFailureSteps() == null) continue;
+//            // Collections.reverse(workflowSteps.get(i).getFailureSteps());
+//            actions.addAll(workflowSteps.get(i).getFailureSteps());
+//        }
+//
+//        for (WorkflowStep action : actions) {
+//            requestRetry.executeFailure(action);
+//        }
+//        // TODO: 2/16/2024 send callback
+//    }
 }

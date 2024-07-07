@@ -71,10 +71,10 @@ public non-sealed class TPOServiceImpl implements TPOService {
                         // todo : check here otherwise clone object
                         List<EsbParameter> esbParameters = new java.util.ArrayList<>(List.copyOf(esbRootActionRequest.getEsbContent().getEsbParameter()));
                         esbParameters.addAll(esbService.getEsbParameter());
-                        workflow.getWorkflowSteps().add(builderStep(tpoId, pattern, esbParameters));
+                        workflow.getWorkflowSteps().add(builderStep(tpoId, pattern, esbParameters, tpoData.isCritical()));
                     }
                 } else {
-                    workflow.getWorkflowSteps().add(builderStep(tpoId, pattern, esbRootActionRequest.getEsbContent().getEsbParameter()));
+                    workflow.getWorkflowSteps().add(builderStep(tpoId, pattern, esbRootActionRequest.getEsbContent().getEsbParameter(), tpoData.isCritical()));
                 }
             }
         } catch (IOException | JDOMException e) {
@@ -93,7 +93,7 @@ public non-sealed class TPOServiceImpl implements TPOService {
         try {
             Workflow workflow = new Workflow();
             for (TPOWorkOrder previousStatesDatum : tpoData.getPreviousStatesData()) {
-                workflow.getWorkflowSteps().add(builderStep(tpoId, previousStatesDatum, esbRootActionRequest.getEsbContent().getEsbParameter()));
+                workflow.getWorkflowSteps().add(builderStep(tpoId, previousStatesDatum, esbRootActionRequest.getEsbContent().getEsbParameter(), tpoData.isCritical()));
             }
             return workflow;
         } catch (IOException | JDOMException e) {
@@ -101,24 +101,24 @@ public non-sealed class TPOServiceImpl implements TPOService {
         }
     }
 
-    private WorkflowStep builderStep(int tpoId, TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
-        WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters);
+    private WorkflowStep builderStep(int tpoId, TPOWorkOrder pattern, List<EsbParameter> esbParameters, boolean isCritical) throws IOException, JDOMException {
+        WorkflowStep workflowStep = buildWorkflowStep(pattern, esbParameters, true);
         workflowStep.setWebServiceClassName(pattern.getWebServiceClassName());
         // TODO: to be review
         Optional<TpoFailureState> tpoFailureState = tpoFailureStateRepository.findByTpoIdAndWoId(tpoId, pattern.getId());
         if (tpoFailureState.isPresent()) {
             TPOData tpoData = tpoDataRepository.findById(tpoFailureState.get().getTpoFailureId()).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoId));
             for (TPOWorkOrder tpoWorkOrder : tpoData.getLinkedList()) {
-                WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrder, esbParameters);
+                WorkflowStep workflowStepFailure = buildWorkflowStep(tpoWorkOrder, esbParameters, !isCritical);
                 workflowStep.getFailureSteps().add(workflowStepFailure);
             }
         }
         return workflowStep;
     }
 
-    private WorkflowStep buildWorkflowStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters) throws IOException, JDOMException {
+    private WorkflowStep buildWorkflowStep(TPOWorkOrder pattern, List<EsbParameter> esbParameters, boolean isNormalFlow) throws JDOMException {
         WorkflowStep workflowStep = new WorkflowStep();
-        String template = mappingBuilder.buildSOAPTemplate(pattern.getTemplate(), esbParameters);
+        String template = mappingBuilder.buildSOAPTemplate(pattern.getTemplate(), esbParameters, isNormalFlow);
         workflowStep.setBodyContent(template);
         if (configurationRepository.findByKeyName(pattern.getEquipment().toUpperCase()).isPresent()) {
             workflowStep.setUrl(configurationRepository.findByKeyName(pattern.getEquipment().toUpperCase()).get().getValueContent());

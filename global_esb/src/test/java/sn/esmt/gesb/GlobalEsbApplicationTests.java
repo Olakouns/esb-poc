@@ -135,7 +135,7 @@ class GlobalEsbApplicationTests {
     private SubscriberData generateSubscriberData() {
         SubscriberData subscriberData = new SubscriberData();
         Service service = new Service();
-        service.setServiceType(ServiceType.SERV_5_G);
+        service.setServiceType(ServiceType.SERV_5G);
         service.setTargetNumber("");
         service.setActive(true);
 

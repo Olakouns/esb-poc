@@ -15,6 +15,8 @@ import sn.esmt.gesb.soam.EsbRootActionResponse;
 import sn.esmt.gesb.soam.EsbService;
 
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/request/gesb/xml")
@@ -25,7 +27,7 @@ public class GesbXmlController {
     private final QueueManagerComponent queueManagerComponent;
 
     @PostMapping(consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
-    public ResponseEntity<EsbRootActionResponse> processRequest(@RequestHeader(value = "callback_url", required = false) String callbackURL, @RequestBody EsbRootActionRequest esbRootActionRequest) {
+    public ResponseEntity<EsbRootActionResponse> processRequest(@RequestHeader(value = "callback_url", required = false) String callbackURL, @RequestBody EsbRootActionRequest esbRootActionRequest) throws ExecutionException, InterruptedException {
         EsbRootActionResponse response = new EsbRootActionResponse();
         response.setSuccess(false);
 
@@ -61,14 +63,14 @@ public class GesbXmlController {
             }
         }
 
-        if (esbRootActionRequest.getEsbContent().getEsbServices() != null && esbRootActionRequest.getEsbContent().getEsbServices().getEsbService().size() > 0) {
+        if (esbRootActionRequest.getEsbContent().getEsbServices() != null && !esbRootActionRequest.getEsbContent().getEsbServices().getEsbService().isEmpty()) {
             for (EsbService esbService : esbRootActionRequest.getEsbContent().getEsbServices().getEsbService()) {
                 if (esbService.getVerb() == null) {
                     response.setMessage("esbService Verb is required");
                     return ResponseEntity.badRequest().body(response);
                 }
 
-                if (esbService.getEsbParameter().size() == 0) {
+                if (esbService.getEsbParameter().isEmpty()) {
                     response.setMessage("minimum one esbParameter is required for esbService");
                     return ResponseEntity.badRequest().body(response);
                 }
@@ -89,11 +91,16 @@ public class GesbXmlController {
         }
 
         log.info("Get request {} at {}", esbRootActionRequest.getRequestId(), new Date().getTime());
-        queueManagerComponent.enqueue(esbRootActionRequest);
-
-        response.setSuccess(true);
-        response.setMessage("Request received");
-        return ResponseEntity.ok().body(response);
+        CompletableFuture<EsbRootActionResponse> future = queueManagerComponent.enqueue(esbRootActionRequest);
+        EsbRootActionResponse result = future.get();  // Wait for the response
+//        queueManagerComponent.enqueue(esbRootActionRequest);
+//        response.setSuccess(true);
+//        response.setMessage("Request received");
+        if (result.isSuccess()){
+            return ResponseEntity.ok().body(result);
+        } else{
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
 

@@ -103,7 +103,6 @@ public class SubscriberUserServiceImpl implements SubscriberUserService {
                 subscriberUserRepository.save(user);
                 break;
             case UPDATE:
-                System.err.println("ICI");
                 TLService tlServiceSave = findTLServiceByType(user, service);
                 tlServiceSave.setActivated(service.isActive());
                 tlServiceRepository.save(tlServiceSave);

@@ -16,12 +16,14 @@ import java.util.regex.Pattern;
 
 @Component
 public class MappingBuilder {
-    public String buildSOAPTemplate(String template, List<EsbParameter> esbParameters) {
+    public String buildSOAPTemplate(String template, List<EsbParameter> esbParameters, boolean isNormalFlow) {
         for (String extractVariable : extractVariables(template)) {
             String variableName = extractVariable.startsWith("!") ? extractVariable.substring(1) : extractVariable;
             Optional<EsbParameter> parameter = esbParameters.stream().filter(esbParameter -> esbParameter.getName().equals(variableName)).findFirst();
             if (parameter.isPresent()) {
-                template = template.replace("${" + extractVariable + "}", getBindingData(extractVariable, parameter.get().getNewValue()));
+                template = template.replace("${" + extractVariable + "}",
+                        getBindingData(extractVariable,
+                                isNormalFlow ? parameter.get().getNewValue() : parameter.get().getOldValue()));
             } else {
                 // todo: throw exception here
                 template = template.replace("${" + extractVariable + "}", "");

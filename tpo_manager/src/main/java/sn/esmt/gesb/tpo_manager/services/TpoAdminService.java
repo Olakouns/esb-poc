@@ -17,7 +17,9 @@ public interface TpoAdminService {
 
     TPOData createTpoData(TPOData tpoData);
 
-    TPOData updateTpoData(int id, TPOData tpoData);
+//    TPOData updateTpoData(int id, TPOData tpoData);
+
+    TPOData updateTpoDataInfo(int id, TPOData tpoData);
 
     TPOData getTpoDataById(int id);
 
@@ -28,8 +30,11 @@ public interface TpoAdminService {
     List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId);
 
     TPOWorkOrder addTpoWordOrder(int tpoDataId, TPOWorkOrder tpoWordOrder);
+
     ApiResponse addManyTpoWordOrder(int tpoDataId, List<TPOWorkOrder> tpoWordOrders);
+
     ApiResponse addTpoPreviousState(int tpoDataId, List<TPOWorkOrder> tpoWordOrders);
+
     ApiResponse addTpoWordOrderById(int tpoDataId, int tpoWordOrderId);
 
     ApiResponse removeTpoWordOrder(int tpoDataId, int tpoWordOrderId);
@@ -57,6 +62,7 @@ public interface TpoAdminService {
     TpoFailureState addTpoForWOFailureTo(int tpoWordOrderId, int tpoDataId, int tpoFailureId);
 
     TpoFailureState updateFailureTpo(int tpoFailureStateId, int woId, int tpoDataId, int tpoFailureId);
+
     ApiResponse deleteFailureTpo(int tpoFailureStateId, int tpoDataId);
 
 //    ApiResponse addTpoWordOrdersFailureToWK(int tpoWordOrderId, List<TPOWorkOrder> tpoWordOrders);

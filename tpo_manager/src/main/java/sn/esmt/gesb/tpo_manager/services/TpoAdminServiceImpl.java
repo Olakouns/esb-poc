@@ -62,17 +62,30 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
     @Override
     public TPOData createTpoData(TPOData tpoData) {
+        if (tpoDataRepository.existsByVerbAndTpoCondition(tpoData.getVerb(), tpoData.getTpoCondition())) {
+            throw new RequestNotAcceptableException("TPO already exist with the same verb and condition");
+        }
         return tpoDataRepository.save(tpoData);
     }
 
+//    @Override
+//    public TPOData updateTpoData(int tpoDataId, TPOData tpoData) {
+//        TPOData tpoDataDB = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
+//        tpoDataDB.setTpo(tpoData.getTpo());
+//        tpoDataDB.setTpoCondition(tpoData.getTpoCondition());
+//        tpoDataDB.setCritical(tpoData.isCritical());
+//        // todo : to be reviewed
+////        tpoDataDB.setTpoDataOnFailure(tpoData.getTpoDataOnFailure());
+//        tpoDataDB.setDescription(tpoData.getDescription());
+//        return tpoDataRepository.save(tpoDataDB);
+//    }
+
     @Override
-    public TPOData updateTpoData(int tpoDataId, TPOData tpoData) {
+    public TPOData updateTpoDataInfo(int tpoDataId, TPOData tpoData) {
         TPOData tpoDataDB = tpoDataRepository.findById(tpoDataId).orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId));
         tpoDataDB.setTpo(tpoData.getTpo());
         tpoDataDB.setTpoCondition(tpoData.getTpoCondition());
         tpoDataDB.setCritical(tpoData.isCritical());
-        // todo : to be reviewed
-//        tpoDataDB.setTpoDataOnFailure(tpoData.getTpoDataOnFailure());
         tpoDataDB.setDescription(tpoData.getDescription());
         return tpoDataRepository.save(tpoDataDB);
     }
@@ -94,7 +107,7 @@ public class TpoAdminServiceImpl implements TpoAdminService {
 
     @Override
     public List<TPOWorkOrder> getAllTpoWordOrder(int tpoDataId) {
-        List<TPOWorkOrder> tpoWorkOrders =  tpoDataRepository.findById(tpoDataId)
+        List<TPOWorkOrder> tpoWorkOrders = tpoDataRepository.findById(tpoDataId)
                 .orElseThrow(() -> new ResourceNotFoundException("TPOData", "id", tpoDataId)).getLinkedList();
         tpoWorkOrders.forEach(tpoWorkOrder -> tpoFailureStateRepository
                 .findByTpoIdAndWoId(tpoDataId, tpoWorkOrder.getId())
@@ -269,8 +282,8 @@ public class TpoAdminServiceImpl implements TpoAdminService {
             throw new BadRequestException("Tpo already associate to word order");
         }
 
-        if (!tpoDataRepository.existsById(tpoFailureId)){
-            throw  new ResourceNotFoundException("TPOData", "id", tpoFailureId);
+        if (!tpoDataRepository.existsById(tpoFailureId)) {
+            throw new ResourceNotFoundException("TPOData", "id", tpoFailureId);
         }
 
         TpoFailureState tpoFailureState = new TpoFailureState();

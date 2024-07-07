@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import sn.esmt.gesb.tpo_manager.models.TPOData;
 
 public interface TPODataRepository extends JpaRepository<TPOData, Integer>, JpaSpecificationExecutor<TPOData> {
+    boolean existsByVerbAndTpoCondition(String verb, String tpoCondition);
 }

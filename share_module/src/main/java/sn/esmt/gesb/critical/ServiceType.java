@@ -41,7 +41,7 @@ public enum ServiceType {
     SERV_VOLTE("SERV_VOLTE"),
     SERV_ROAMING("SERV_ROAMING"),
     @XmlEnumValue("SERV_5G")
-    SERV_5_G("SERV_5G"),
+    SERV_5G("SERV_5G"),
     SERV_LTE("SERV_LTE"),
     SERV_VOICE("SERV_VOICE"),
     SERV_SMS("SERV_SMS"),

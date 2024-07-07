@@ -40,10 +40,10 @@ public class TpoAdminController {
         return tpoAdminService.createTpoData(tpoData);
     }
 
-    @PutMapping("/tpo-data/{id}/edit-flow")
-    public TPOData updateTpoData(@PathVariable int id, @RequestBody TPOData tpoData) {
-        return tpoAdminService.updateTpoData(id, tpoData);
-    }
+//    @PutMapping("/tpo-data/{id}/edit-flow")
+//    public TPOData updateTpoData(@PathVariable int id, @RequestBody TPOData tpoData) {
+//        return tpoAdminService.updateTpoData(id, tpoData);
+//    }
 
     @GetMapping("/tpo-data/{id}")
     public TPOData getTpoDataById(@PathVariable int id) {
@@ -53,6 +53,11 @@ public class TpoAdminController {
     @PutMapping("/tpo-data/{id}")
     public ApiResponse updateTpoDataPatterns(@PathVariable int id, @RequestBody LinkedList<TPOWorkOrder> tpoData) {
         return tpoAdminService.updateTpoDataPatterns(id, tpoData);
+    }
+
+    @PutMapping("/tpo-data/{id}/edit")
+    public TPOData updateTpoDataInfo(@PathVariable int id, @RequestBody TPOData tpoData) {
+        return tpoAdminService.updateTpoDataInfo(id, tpoData);
     }
 
     @DeleteMapping("/tpo-data/{id}")

@@ -10,3 +10,9 @@
         </esbRootActionRequest>
     </Body>
 </Envelope>
+
+<esbRootActionRequest requestId="12358645" xmlns="http://esmt.sn/gesb/soam">
+<esbContent verb="DELETE_SUBSCRIBER_PRE_PAID">
+    <esbParameter name="phoneNumber" newValue="+221785900131" oldValue=""/>
+</esbContent>
+</esbRootActionRequest>

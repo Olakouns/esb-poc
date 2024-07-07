@@ -37,8 +37,9 @@ public class RequestProcessor {
     @Value("${esb.url}")
     private String ESB_BASE_URL;
 
-    @Async
-    public void processRequest(EsbRootActionRequest esbRootActionRequest) {
+//    @Async
+    public EsbRootActionResponse processRequest(EsbRootActionRequest esbRootActionRequest) {
+        EsbRootActionResponse esbRootActionResponse = new EsbRootActionResponse();
         log.info("Processing request: {} at {}", esbRootActionRequest.getRequestId(), new Date().getTime());
         try {
             TPODataDto tpoDataDto = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager", esbRootActionRequest, TPODataDto.class);
@@ -55,15 +56,21 @@ public class RequestProcessor {
 
             Workflow workflow = restTemplate.postForObject(ESB_BASE_URL + "tpo-manager/" + tpoDataDto.getId() + "/mapping", esbRootActionRequest, Workflow.class);
 
-//            System.out.println(workflow);
+//            System.err.println(workflow);
+
             if (workflow == null || workflow.getWorkflowSteps().isEmpty()) {
                 log.error("No steps found for TPOData: {}", tpoDataDto.getTpo());
-                return;
+                esbRootActionResponse.setSuccess(false);
+                esbRootActionResponse.setMessage("No steps found for TPOData: " + tpoDataDto.getTpo());
+                return esbRootActionResponse;
             }
 
-            sagaOrchestratorService.executeSaga(workflow.getWorkflowSteps(), "CALL_BACK_URL", esbRootActionRequest.getRequestId());
+            return sagaOrchestratorService.executeSaga(workflow.getWorkflowSteps(), "CALL_BACK_URL", esbRootActionRequest.getRequestId());
         } catch (Exception e) {
             log.error("Error processing request {} : {}", esbRootActionRequest.getRequestId(), e.getMessage());
+            esbRootActionResponse.setSuccess(false);
+            esbRootActionResponse.setMessage(String.format("Error processing request %s : %s " , esbRootActionRequest.getRequestId(), e.getMessage()));
+            return esbRootActionResponse;
         }
     }
 
@@ -80,11 +87,15 @@ public class RequestProcessor {
                     .filter(esbParameter1 -> esbParameter1.getName().equals(esbParameter.getName()))
                     .findFirst()
                     .ifPresentOrElse(
-                            p -> p.setOldValue(esbParameter.getNewValue()),
+                            p -> p.setOldValue(esbParameter.getOldValue()),
                             () -> esbRootActionRequestFromUser
                                     .getEsbContent()
                                     .getEsbParameter().add(esbParameter)
                     );
+        }
+
+        if (esbRootActionRequestFromUser.getEsbContent().getEsbServices() == null) {
+            esbRootActionRequestFromUser.getEsbContent().setEsbServices(new EsbServices());
         }
 
         if (!esbRootActionRequestData.getEsbContent().getEsbServices().getEsbService().isEmpty()) {
@@ -102,7 +113,7 @@ public class RequestProcessor {
                         .getEsbService()
                         .stream().filter(esbService1 -> {
                             Optional<EsbParameter> parameter2 = esbService1.getEsbParameter().stream().filter(esbParameter -> esbParameter.getName().equals("serviceType")).findFirst();
-                            return parameter2.filter(esbParameter -> parameter.get().getNewValue().equals(esbParameter.getNewValue())).isPresent();
+                            return parameter2.filter(esbParameter -> parameter.get().getOldValue().equals(esbParameter.getNewValue())).isPresent();
                         }).findFirst();
 
                 if (esbServiceB.isEmpty()) {
@@ -121,7 +132,7 @@ public class RequestProcessor {
                                         .getEsbParameter()
                                         .stream()
                                         .filter(esbParameter1 -> esbParameter1.getName().equals(esbParameter.getName())).findFirst()
-                                .ifPresent(value -> esbParameter.setOldValue(value.getNewValue()));
+                                .ifPresent(value -> esbParameter.setOldValue(value.getOldValue()));
                                 return  esbParameter;
                             });
 

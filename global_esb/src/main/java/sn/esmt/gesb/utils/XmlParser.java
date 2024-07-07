@@ -66,12 +66,14 @@ public class XmlParser {
                         EsbParameter parameter = new EsbParameter();
                         parameter.setName(childNode.getNodeName().split(":")[1]);
                         parameter.setOldValue(childNode.getTextContent().trim());
+                        parameter.setNewValue("");
                         esbService.getEsbParameter().add(parameter);
                     }
                     esbServices.add(esbService);
                 } else {
                     EsbParameter esbParameter = new EsbParameter();
                     esbParameter.setName(nodeName);
+                    esbParameter.setNewValue("");
                     esbParameter.setOldValue(nodeValue);
                     esbParameterList.add(esbParameter);
                 }

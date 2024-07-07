@@ -9,12 +9,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import sn.esmt.gesb.services.Impl.RequestProcessor;
 import sn.esmt.gesb.soam.EsbRootActionRequest;
+import sn.esmt.gesb.soam.EsbRootActionResponse;
 
 import java.util.Date;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Component
 @RequiredArgsConstructor
@@ -26,11 +24,15 @@ public class QueueManagerComponent {
     @Value("${max.queue.size}")
     public int MAX_QUEUE_SIZE;
     private final ConcurrentLinkedQueue<EsbRootActionRequest> requestQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<CompletableFuture<EsbRootActionResponse>> responseQueue = new ConcurrentLinkedQueue<>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    @Async
-    public void enqueue(EsbRootActionRequest actionRequest) {
+//    @Async
+    public CompletableFuture<EsbRootActionResponse> enqueue(EsbRootActionRequest actionRequest) {
+        CompletableFuture<EsbRootActionResponse> future = new CompletableFuture<>();
         requestQueue.add(actionRequest);
+        responseQueue.add(future);
+        return future;
     }
 
     @PostConstruct
@@ -43,16 +45,18 @@ public class QueueManagerComponent {
         while (!Thread.interrupted()) {
             if (!requestQueue.isEmpty()) {
                 EsbRootActionRequest queueItem = requestQueue.poll();
-                if (queueItem != null) {
+                CompletableFuture<EsbRootActionResponse> future = responseQueue.poll();
+                if (queueItem != null && future != null) {
                     log.info("Start request {} treatment  at {}", queueItem.getRequestId(), new Date());
-                    processRequest(queueItem);
+                    EsbRootActionResponse response = processRequest(queueItem);
+                    future.complete(response);
                 }
             }
         }
     }
 
-    private void processRequest(EsbRootActionRequest request) {
-        coreService.processRequest(request);
+    private EsbRootActionResponse processRequest(EsbRootActionRequest request) {
+        return coreService.processRequest(request);
     }
 
     public int getQueueSize() {
