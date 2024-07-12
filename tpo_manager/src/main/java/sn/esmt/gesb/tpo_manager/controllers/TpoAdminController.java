@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/admin/tpo-manager")
+@CrossOrigin(value = "*")
 public class TpoAdminController {
     private final TpoAdminService tpoAdminService;
 
