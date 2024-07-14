@@ -17,6 +17,8 @@ import sn.esmt.gesb.soam.EsbService;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/request/gesb/xml")
@@ -92,16 +94,17 @@ public class GesbXmlController {
 
         log.info("Get request {} at {}", esbRootActionRequest.getRequestId(), new Date().getTime());
         CompletableFuture<EsbRootActionResponse> future = queueManagerComponent.enqueue(esbRootActionRequest);
-        EsbRootActionResponse result = future.get();  // Wait for the response
-//        queueManagerComponent.enqueue(esbRootActionRequest);
-//        response.setSuccess(true);
-//        response.setMessage("Request received");
-        if (result.isSuccess()){
-            return ResponseEntity.ok().body(result);
-        } else{
-            return ResponseEntity.badRequest().body(result);
+        EsbRootActionResponse result = null;  // Wait for the response
+        try {
+            result = future.get(5000, TimeUnit.SECONDS);
+            if (result.isSuccess()){
+                return ResponseEntity.ok().body(result);
+            } else{
+                return ResponseEntity.badRequest().body(result);
+            }
+        } catch (TimeoutException e) {
+            log.error("TimeoutException {}", e.getMessage());
+            return ResponseEntity.unprocessableEntity().body(response);
         }
     }
-
-
 }

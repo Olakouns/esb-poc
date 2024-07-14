@@ -31,7 +31,8 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name:  mysql-config-map
-                  key: mysql-hlr-server
+                  key: mysql-server
+#                  key: mysql-hlr-server
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
@@ -48,6 +49,7 @@ metadata:
     app: hlr-app
 spec:
   type: NodePort
+#  type: LoadBalancer
   selector:
     app: hlr-app
   ports:

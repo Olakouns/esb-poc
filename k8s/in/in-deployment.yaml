@@ -31,7 +31,8 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name:  mysql-config-map
-                  key: mysql-in-server
+                  key: mysql-server
+#                  key: mysql-in-server
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
@@ -48,6 +49,7 @@ metadata:
     app: in-app
 spec:
   type: NodePort
+#  type: LoadBalancer
   selector:
     app: in-app
   ports:

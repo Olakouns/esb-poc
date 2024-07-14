@@ -6,8 +6,8 @@ metadata:
     app: db-app-hlr
 spec:
   ports:
-    - port: 3307
-      targetPort: 3307
+    - port: 3308
+      targetPort: 3308
   selector:
     app: db-app-hlr
     tier: mysql-hlr
@@ -53,7 +53,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: mysql-config-map
-                  key: mysql-database-name
+                  key: mysql-database-hlr-name
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -78,6 +78,13 @@ spec:
           volumeMounts:
             - name: mysql-persistent-storage-hlr
               mountPath: /var/lib/mysql-hlr
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
       volumes:
         - name: mysql-persistent-storage-hlr
           persistentVolumeClaim:
